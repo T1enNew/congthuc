@@ -274,9 +274,11 @@
   /* Một dòng món gọn: ảnh nhỏ · tên · nhãn · công thức rút gọn */
   function drinkRow(d) {
     const p = photosOf(d.id)[0];
+    const temp = d.temp === "hot" ? "Nóng" : d.temp === "blend" ? "Đá xay" : "Đá";
     return `<a class="drink-row" href="#mon-${d.id}">
-      <span class="dr-ph">${p ? `<img src="images/drinks/thumb/${esc(p.f)}" alt="" loading="lazy" decoding="async">` : cupSVG(d, { cls: "" })}${learned.has(d.id) ? `<span class="dr-done" title="Đã thuộc">${I.ok}</span>` : ""}</span>
-      <span class="dr-main"><b>${esc(d.name)}</b><span class="dr-badges">${tempBadge(d)}${sizeBadge(d)}</span><small class="num">${esc(formulaLine(d))}</small></span>
+      <span class="dr-ph">${p ? `<img src="images/drinks/thumb/${esc(p.f)}" alt="" loading="lazy" decoding="async">` : cupSVG(d, { cls: "" })}</span>
+      <span class="dr-main"><b>${esc(d.name)}</b><small><i class="tdot ${d.temp}"></i>${temp}${d.sizes ? ` · Size ${d.sizes.join("/")}` : ""}</small></span>
+      ${learned.has(d.id) ? `<span class="dr-done" title="Đã thuộc" aria-label="Đã thuộc">${I.ok}</span>` : "<span></span>"}
       <span class="chev" aria-hidden="true">${I.next}</span>
     </a>`;
   }
@@ -373,11 +375,12 @@
       n += ds.length;
       const all = drinks.filter((d) => d.cat === c.id);
       const done = all.filter((d) => learned.has(d.id)).length;
-      const faces = ds.slice(0, 3).map((d) => photosOf(d.id)[0]).filter(Boolean);
+      const cover = ds.map((d) => photosOf(d.id)[0]).find(Boolean);
+      const title = c.name.length > 22 ? c.short : c.name;
       html += `<details class="cat-acc" data-cat="${c.id}" ${auto || openCats.has(c.id) ? "open" : ""}>
         <summary>
-          <span class="faces">${faces.map((p) => `<img src="images/drinks/thumb/${esc(p.f)}" alt="" loading="lazy" decoding="async">`).join("")}</span>
-          <span class="cat-main"><b>${esc(c.name)}</b><small>${ds.length} món${done ? ` · đã thuộc ${done}/${all.length}` : ""}</small></span>
+          <span class="cat-thumb">${cover ? `<img src="images/drinks/thumb/${esc(cover.f)}" alt="" loading="lazy" decoding="async">` : ""}</span>
+          <span class="cat-main"><b>${esc(title)}</b><small>${ds.length} món${done ? ` · đã thuộc ${done}` : ""}</small></span>
           <span class="chev" aria-hidden="true">${I.next}</span>
         </summary>
         <div class="drink-rows">${ds.map(drinkRow).join("")}</div>
@@ -386,7 +389,7 @@
     if (!n) html = q
       ? `<div class="empty"><div>Không thấy món nào khớp “${esc(q)}”${filterCount() ? " trong bộ lọc đang chọn" : ""}.</div><button class="btn btn-primary" type="button" data-ask="${esc(q)}">${I.chat} Hỏi trợ lý AI</button></div>`
       : `<div class="empty"><div>Không có món nào với bộ lọc này.</div></div>`;
-    list.innerHTML = html ? `<div class="cat-list">${html}</div>` : html;
+    list.innerHTML = html ? `<div class="menu-list">${html}</div>` : html;
     drawFilterSummary();
     if (!auto) $$("details.cat-acc", list).forEach((el) => el.addEventListener("toggle", () => {
       if (el.open) openCats.add(el.dataset.cat); else openCats.delete(el.dataset.cat);
@@ -870,11 +873,9 @@ Quy tắc:
     return null;
   }
 
+  // Chỉ hiện công tắc Claude khi trang chạy bên trong Claude; còn lại không hiện dòng phụ nào.
   function modeLine() {
-    const m = aiMode();
-    const txt = m === "claude" ? "Claude · tính vào lượt dùng Claude của bạn" : m === "proxy" ? "AI trực tuyến · miễn phí" : "Miễn phí · tra từ dữ liệu công thức";
-    const toggle = chat.sample ? `<button type="button" class="mini-toggle" id="ai-claude" aria-pressed="${chat.useClaude}">Dùng Claude</button>` : "";
-    return `<span class="mode-dot${m !== "offline" ? " live" : ""}"></span><span>${esc(txt)}</span>${toggle}`;
+    return chat.sample ? `<button type="button" class="mini-toggle" id="ai-claude" aria-pressed="${chat.useClaude}">Dùng Claude${chat.useClaude ? " · đang bật" : ""}</button>` : "";
   }
 
   function buildChatUI() {
@@ -1043,7 +1044,7 @@ Quy tắc:
     try {
       if (mode === "claude") await askClaude(bot, onText, data);
       else if (mode === "proxy") await askProxy(bot, onText, data);
-      else { bot.content = offlineAnswer(question, chat.ctx); bot.meta = "Trả lời từ dữ liệu công thức (miễn phí)"; }
+      else { bot.content = offlineAnswer(question, chat.ctx); }
     } catch (e) {
       const code = e && e.code;
       if (code === "cancelled" || (e && e.name === "AbortError")) { bot.content = (e.text || bot.content || "") + "\n\n_(Đã dừng)_"; }
