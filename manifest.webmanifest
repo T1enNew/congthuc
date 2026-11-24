@@ -1,0 +1,17 @@
+{
+  "name": "Sổ tay pha chế — Last Minute Cafe",
+  "short_name": "Pha chế",
+  "description": "Học nhanh công thức đồ uống: ảnh thật, hình ly minh hoạ, thẻ ghi nhớ, kiểm tra và trợ lý AI.",
+  "lang": "vi",
+  "start_url": "./#mon",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffaf7",
+  "theme_color": "#d2462a",
+  "icons": [
+    { "src": "images/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "images/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "images/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

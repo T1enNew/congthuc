@@ -1,0 +1,8 @@
+name = "so-tay-pha-che-ai"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Chỉ cho phép trang của bạn gọi Worker (cách nhau bằng dấu phẩy).
+ALLOWED_ORIGINS = "https://t1ennew.github.io"
