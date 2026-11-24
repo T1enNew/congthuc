@@ -331,12 +331,12 @@
     const ps = photosOf(d.id);
     if (!ps.length) return `<div class="gallery" style="aspect-ratio:4/3;display:grid;place-items:center;padding:16px">${cupSVG(d, { cls: "cup-svg" }).replace("<svg ", '<svg style="height:100%;width:auto" ')}</div>`;
     return `<div class="gallery">
-      <div class="gallery-track" tabindex="0" aria-label="Ảnh ${esc(d.name)}">${ps.map((p, i) => `<figure><button type="button" data-lb="${i}" aria-label="Phóng to ảnh ${i + 1}">${imgTag(p, { sizes: "(min-width: 900px) 560px, 100vw", eager: i === 0, alt: `${d.name} — ảnh ${i + 1}` })}</button><figcaption>Ảnh: ${esc(p.by || "Wikimedia Commons")} · ${esc(p.lic || "")}</figcaption></figure>`).join("")}</div>
+      <div class="gallery-track" tabindex="0" aria-label="Ảnh ${esc(d.name)}">${ps.map((p, i) => `<figure><button type="button" data-lb="${i}" aria-label="Phóng to ảnh ${i + 1}">${imgTag(p, { sizes: "(min-width: 900px) 560px, 100vw", eager: i === 0, alt: `${d.name} — ảnh ${i + 1}` })}</button></figure>`).join("")}</div>
       ${ps.length > 1 ? `<div class="gallery-dots" aria-hidden="true">${ps.map((_, i) => `<i class="${i === 0 ? "on" : ""}"></i>`).join("")}</div>
       <button class="gallery-nav prev" type="button" aria-label="Ảnh trước">${I.back}</button><button class="gallery-nav next" type="button" aria-label="Ảnh sau">${I.next}</button>` : ""}
     </div>
     ${ps.length > 1 ? `<div class="thumbs">${ps.map((p, i) => `<button type="button" data-go="${i}" aria-label="Xem ảnh ${i + 1}" aria-current="${i === 0}"><img src="images/drinks/thumb/${esc(p.f)}" alt="" loading="lazy" decoding="async"></button>`).join("")}</div>` : ""}
-    <div class="photo-note">Ảnh chụp thật (Wikimedia Commons) minh hoạ kiểu món — ly và cách trình bày ở quán có thể khác. Chạm ảnh để xem nguồn.</div>`;
+    <div class="photo-note">Ảnh thật minh hoạ kiểu món — ly ở quán có thể khác. Chạm ảnh để phóng to.</div>`;
   }
   function wireGallery(root, d) {
     const track = $(".gallery-track", root);
@@ -972,6 +972,15 @@ Quy tắc:
     const nt = cur === "dark" ? "light" : "dark"; store.set("theme", nt); applyTheme(nt);
   });
   $("#search-btn").addEventListener("click", () => { if (location.hash && location.hash !== "#mon") location.hash = "#mon"; setTimeout(() => { const q = $("#q"); if (q) { q.focus(); q.scrollIntoView({ block: "center" }); } }, 30); });
+
+  // Ảnh lớn lỗi/chưa tải được -> dùng ảnh nhỏ; ảnh nhỏ cũng lỗi -> ẩn ảnh, giữ khung màu nền.
+  document.addEventListener("error", (e) => {
+    const t = e.target;
+    if (!t || t.tagName !== "IMG") return;
+    if (t.srcset) { t.removeAttribute("srcset"); t.removeAttribute("sizes"); if (!t.src.includes("/thumb/")) t.src = t.src.replace("/full/", "/thumb/"); return; }
+    if (t.src.includes("/full/")) { t.src = t.src.replace("/full/", "/thumb/"); return; }
+    t.style.visibility = "hidden";
+  }, true);
 
   window.__sotay = { ask: (q) => ask(q), offlineAnswer: (q) => offlineAnswer(q) }; // tiện kiểm thử
   route();
