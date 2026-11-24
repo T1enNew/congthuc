@@ -95,12 +95,11 @@ export default function Home() {
           {groups.map(({ c, ds }) => {
             const all = drinks.filter((d) => d.cat === c.id);
             const done = all.filter((d) => learned.has(d.id)).length;
-            const cover = ds.map((d) => photosOf(d.id)[0]).find(Boolean);
             return (
               <details key={c.id + (auto ? "-a" : "")} className="cat-acc" open={auto || openCats.has(c.id)} onToggle={(e) => toggleCat(c.id, e.currentTarget.open)}>
                 <summary>
-                  <span className="cat-thumb"><Thumb p={cover} /></span>
-                  <span className="cat-main"><b>{c.name.length > 22 ? c.short : c.name}</b><small>{ds.length} món{done ? ` · đã thuộc ${done}` : ""}</small></span>
+                  <b className="cat-name">{c.name.length > 22 ? c.short : c.name}</b>
+                  <span className="cat-count num">{done ? `${done}/` : ""}{ds.length} món</span>
                   <span className="chev" aria-hidden="true"><Icon name="next" /></span>
                 </summary>
                 <div className="drink-rows">{ds.map((d) => <DrinkRow key={d.id} d={d} done={learned.has(d.id)} />)}</div>
