@@ -1,6 +1,6 @@
 /* Ảnh thật từ Wikimedia Commons (tự sinh bởi công cụ build — có thể sửa tay).
- * f: tên file trong images/drinks/full và images/drinks/thumb; by/lic/src: ghi công tác giả & giấy phép. */
-window.PHOTOS = {
+ * f: tên file trong public/images/drinks/full và public/images/drinks/thumb; by/lic/src: ghi công tác giả & giấy phép. */
+export const PHOTOS = {
  "ca-phe-den-nong": [
   {
    "f": "ca-phe-den-nong-1.jpg",

@@ -1,5 +1,5 @@
-# CI/CD cho Sổ tay pha chế
-# - Mỗi lần push / mở Pull Request: kiểm tra code + dữ liệu công thức + ảnh (npm test) và build thử.
+# CI/CD cho Sổ tay pha chế (React + Vite)
+# - Mỗi lần push / mở Pull Request: kiểm tra dữ liệu công thức + ảnh (npm test) và build (vite build).
 # - Push lên nhánh main: tự đưa web lên GitHub Pages.
 # - Nếu repo có secret CLOUDFLARE_API_TOKEN: tự cập nhật AI Worker (ai-proxy/) lên Cloudflare.
 name: CI/CD
@@ -27,12 +27,19 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
+          cache: npm
 
-      - name: Kiểm tra code, dữ liệu công thức, ảnh
+      - name: Cài thư viện
+        run: npm ci
+
+      - name: Kiểm tra dữ liệu công thức, ảnh, Worker
         run: npm test
 
       - name: Build bản web (dist/)
         run: npm run build
+        env:
+          # Địa chỉ AI Worker: đặt ở Settings → Secrets and variables → Actions → Variables → AI_PROXY_URL
+          VITE_AI_PROXY_URL: ${{ vars.AI_PROXY_URL }}
 
       - name: Đóng gói cho GitHub Pages
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'

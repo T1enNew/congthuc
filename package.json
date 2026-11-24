@@ -1,13 +1,25 @@
 {
   "name": "so-tay-pha-che",
   "private": true,
-  "description": "Web học công thức đồ uống — tĩnh, không cần cài thư viện.",
+  "version": "2.0.0",
+  "description": "Web học công thức đồ uống — React + Vite.",
   "type": "module",
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=20.19"
+  },
   "scripts": {
-    "start": "node scripts/serve.mjs",
-    "test": "node scripts/validate.mjs",
-    "build": "node scripts/build.mjs",
-    "preview": "node scripts/build.mjs && node scripts/serve.mjs 5174 --dir dist"
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build && node scripts/stamp-sw.mjs",
+    "preview": "vite build && node scripts/stamp-sw.mjs && vite preview",
+    "test": "node scripts/validate.mjs"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.3.0",
+    "vite": "^8.3.8"
   }
 }

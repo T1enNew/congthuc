@@ -9,7 +9,7 @@
  *  - p: id bán thành phẩm liên quan (nếu có)
  *  - cup.layers: các lớp trong ly, từ ĐÁY lên MIỆNG ly: [mã màu, lượng]
  */
-window.MENU = {
+export const MENU = {
   source: "Cẩm nang thức uống Last Minute Cafe",
 
   categories: [
