@@ -576,6 +576,26 @@ window.PHOTOS = {
    "f": "cold-brew-mo-anh-dao-1.jpg",
    "w": 960,
    "h": 1275,
+   "by": "Lajmmoore",
+   "lic": "CC BY-SA 4.0",
+   "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "src": "https://commons.wikimedia.org/wiki/File:Espresso_tonic.jpg",
+   "title": "Espresso tonic"
+  },
+  {
+   "f": "cold-brew-mo-anh-dao-2.jpg",
+   "w": 640,
+   "h": 640,
+   "by": "Joel Gillman",
+   "lic": "CC BY-SA 2.0",
+   "licUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+   "src": "https://commons.wikimedia.org/wiki/File:Espresso_and_tonic_20140519.jpg",
+   "title": "Espresso and tonic 20140519"
+  },
+  {
+   "f": "cold-brew-mo-anh-dao-3.jpg",
+   "w": 960,
+   "h": 1275,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -586,8 +606,8 @@ window.PHOTOS = {
  "cold-brew-xoai-foam-dua": [
   {
    "f": "cold-brew-xoai-foam-dua-1.jpg",
-   "w": 330,
-   "h": 496,
+   "w": 960,
+   "h": 1443,
    "by": "Sayantan Sarkar",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -596,8 +616,8 @@ window.PHOTOS = {
   },
   {
    "f": "cold-brew-xoai-foam-dua-2.jpg",
-   "w": 330,
-   "h": 496,
+   "w": 960,
+   "h": 1443,
    "by": "Sayantan Sarkar",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -608,8 +628,8 @@ window.PHOTOS = {
  "cold-brew-tuyet-oi": [
   {
    "f": "cold-brew-tuyet-oi-1.jpg",
-   "w": 330,
-   "h": 247,
+   "w": 960,
+   "h": 720,
    "by": "Zeel Patel",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -618,8 +638,8 @@ window.PHOTOS = {
   },
   {
    "f": "cold-brew-tuyet-oi-2.jpg",
-   "w": 330,
-   "h": 221,
+   "w": 960,
+   "h": 643,
    "by": "ProtoplasmaKid",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -628,8 +648,8 @@ window.PHOTOS = {
   },
   {
    "f": "cold-brew-tuyet-oi-3.jpg",
-   "w": 330,
-   "h": 247,
+   "w": 960,
+   "h": 720,
    "by": "Eugene Peretz from Northampton, MA, USA",
    "lic": "CC BY-SA 2.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/2.0",
@@ -640,8 +660,8 @@ window.PHOTOS = {
  "tra-ba-tuoc-dau-oi": [
   {
    "f": "tra-ba-tuoc-dau-oi-1.jpg",
-   "w": 330,
-   "h": 330,
+   "w": 960,
+   "h": 960,
    "by": "Rahul Nadgauda",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -650,8 +670,8 @@ window.PHOTOS = {
   },
   {
    "f": "tra-ba-tuoc-dau-oi-2.jpg",
-   "w": 330,
-   "h": 265,
+   "w": 960,
+   "h": 771,
    "by": "Baoothersks",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -662,8 +682,8 @@ window.PHOTOS = {
  "olong-mo-cam-dao": [
   {
    "f": "olong-mo-cam-dao-1.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Baoothersks",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -672,8 +692,8 @@ window.PHOTOS = {
   },
   {
    "f": "olong-mo-cam-dao-2.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Geoffreyrabbit",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -692,8 +712,8 @@ window.PHOTOS = {
   },
   {
    "f": "olong-mo-cam-dao-4.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Pokemonprime",
    "lic": "CC BY 4.0",
    "licUrl": "https://creativecommons.org/licenses/by/4.0",
@@ -704,8 +724,8 @@ window.PHOTOS = {
  "olong-vai-hong-dua-luoi": [
   {
    "f": "olong-vai-hong-dua-luoi-1.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Chris Olszewski",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -714,8 +734,8 @@ window.PHOTOS = {
   },
   {
    "f": "olong-vai-hong-dua-luoi-2.jpg",
-   "w": 330,
-   "h": 221,
+   "w": 960,
+   "h": 642,
    "by": "Janine from Mililani, Hawaii, United States",
    "lic": "CC BY 2.0",
    "licUrl": "https://creativecommons.org/licenses/by/2.0",
@@ -724,8 +744,8 @@ window.PHOTOS = {
   },
   {
    "f": "olong-vai-hong-dua-luoi-3.jpg",
-   "w": 330,
-   "h": 438,
+   "w": 960,
+   "h": 1275,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -736,8 +756,8 @@ window.PHOTOS = {
  "olong-vai-xoai": [
   {
    "f": "olong-vai-xoai-1.jpg",
-   "w": 330,
-   "h": 221,
+   "w": 960,
+   "h": 642,
    "by": "Janine from Mililani, Hawaii, United States",
    "lic": "CC BY 2.0",
    "licUrl": "https://creativecommons.org/licenses/by/2.0",
@@ -746,8 +766,8 @@ window.PHOTOS = {
   },
   {
    "f": "olong-vai-xoai-2.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Cendy00",
    "lic": "CC BY 4.0",
    "licUrl": "https://creativecommons.org/licenses/by/4.0",
@@ -756,8 +776,8 @@ window.PHOTOS = {
   },
   {
    "f": "olong-vai-xoai-3.jpg",
-   "w": 330,
-   "h": 247,
+   "w": 960,
+   "h": 720,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -768,8 +788,8 @@ window.PHOTOS = {
  "olong-xoai-macchiato-yogurt": [
   {
    "f": "olong-xoai-macchiato-yogurt-1.jpg",
-   "w": 330,
-   "h": 208,
+   "w": 960,
+   "h": 606,
    "by": "P1898",
    "lic": "CC BY 4.0",
    "licUrl": "https://creativecommons.org/licenses/by/4.0",
@@ -778,8 +798,8 @@ window.PHOTOS = {
   },
   {
    "f": "olong-xoai-macchiato-yogurt-2.jpg",
-   "w": 330,
-   "h": 187,
+   "w": 960,
+   "h": 543,
    "by": "Vatsalkumar brahmbhatt",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -790,20 +810,30 @@ window.PHOTOS = {
  "olong-sen-macchiato-cheese": [
   {
    "f": "olong-sen-macchiato-cheese-1.jpg",
-   "w": 330,
-   "h": 248,
+   "w": 960,
+   "h": 720,
    "by": "Không rõ",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
    "src": "https://commons.wikimedia.org/wiki/File:Ch%C3%A9n_tr%C3%A0_sen.jpg",
    "title": "Chén trà sen"
+  },
+  {
+   "f": "olong-sen-macchiato-cheese-2.jpg",
+   "w": 330,
+   "h": 440,
+   "by": "Shwangtianyuan",
+   "lic": "CC BY-SA 4.0",
+   "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "src": "https://commons.wikimedia.org/wiki/File:Mixue_cheese_milk_cover_black_tea-20210923.jpg",
+   "title": "Mixue cheese milk cover black tea-20210923"
   }
  ],
  "ba-tuoc-sua-macchiato-cheese": [
   {
    "f": "ba-tuoc-sua-macchiato-cheese-1.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Vincent60030",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -812,8 +842,8 @@ window.PHOTOS = {
   },
   {
    "f": "ba-tuoc-sua-macchiato-cheese-2.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Battlesnake1",
    "lic": "CC0",
    "licUrl": "",
@@ -834,8 +864,8 @@ window.PHOTOS = {
  "gao-rang-sua-macchiato-cheese": [
   {
    "f": "gao-rang-sua-macchiato-cheese-1.jpg",
-   "w": 330,
-   "h": 247,
+   "w": 960,
+   "h": 720,
    "by": "Baoothersks",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -844,8 +874,8 @@ window.PHOTOS = {
   },
   {
    "f": "gao-rang-sua-macchiato-cheese-2.jpg",
-   "w": 330,
-   "h": 484,
+   "w": 960,
+   "h": 1409,
    "by": "TaiwaneseWaveVN",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -854,8 +884,8 @@ window.PHOTOS = {
   },
   {
    "f": "gao-rang-sua-macchiato-cheese-3.jpg",
-   "w": 330,
-   "h": 247,
+   "w": 960,
+   "h": 720,
    "by": "Selena N. B. H. from Fayetteville, USA",
    "lic": "CC BY 2.0",
    "licUrl": "https://creativecommons.org/licenses/by/2.0",
@@ -864,8 +894,8 @@ window.PHOTOS = {
   },
   {
    "f": "gao-rang-sua-macchiato-cheese-4.jpg",
-   "w": 330,
-   "h": 495,
+   "w": 960,
+   "h": 1439,
    "by": "Matt Gibson Uploaded by Gothick at en.wikipedia",
    "lic": "CC BY-SA 3.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/3.0",
@@ -876,8 +906,8 @@ window.PHOTOS = {
  "olong-sua-macchiato-hat-de": [
   {
    "f": "olong-sua-macchiato-hat-de-1.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Gaurav Dhwaj Khadka",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -886,8 +916,8 @@ window.PHOTOS = {
   },
   {
    "f": "olong-sua-macchiato-hat-de-2.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Gaurav Dhwaj Khadka",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -896,8 +926,8 @@ window.PHOTOS = {
   },
   {
    "f": "olong-sua-macchiato-hat-de-3.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Lirrel boyman",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -906,8 +936,8 @@ window.PHOTOS = {
   },
   {
    "f": "olong-sua-macchiato-hat-de-4.jpg",
-   "w": 330,
-   "h": 247,
+   "w": 960,
+   "h": 720,
    "by": "Geoffreyrabbit",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -918,8 +948,8 @@ window.PHOTOS = {
  "matcha-latte-nong": [
   {
    "f": "matcha-latte-nong-1.jpg",
-   "w": 330,
-   "h": 186,
+   "w": 960,
+   "h": 540,
    "by": "Irvan Ary Maulana",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -928,8 +958,8 @@ window.PHOTOS = {
   },
   {
    "f": "matcha-latte-nong-2.jpg",
-   "w": 330,
-   "h": 330,
+   "w": 960,
+   "h": 960,
    "by": "Jeff Nelson",
    "lic": "CC BY-SA 2.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/2.0",
@@ -938,8 +968,8 @@ window.PHOTOS = {
   },
   {
    "f": "matcha-latte-nong-3.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Anna Korcheva",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -948,8 +978,8 @@ window.PHOTOS = {
   },
   {
    "f": "matcha-latte-nong-4.jpg",
-   "w": 330,
-   "h": 248,
+   "w": 960,
+   "h": 720,
    "by": "NuCastiel from Bangkok, Thailand",
    "lic": "CC BY 2.0",
    "licUrl": "https://creativecommons.org/licenses/by/2.0",
@@ -960,8 +990,8 @@ window.PHOTOS = {
  "matcha-latte-da": [
   {
    "f": "matcha-latte-da-1.jpg",
-   "w": 330,
-   "h": 358,
+   "w": 960,
+   "h": 1043,
    "by": "MichaellaaRubio",
    "lic": "CC BY 4.0",
    "licUrl": "https://creativecommons.org/licenses/by/4.0",
@@ -970,8 +1000,8 @@ window.PHOTOS = {
   },
   {
    "f": "matcha-latte-da-2.jpg",
-   "w": 330,
-   "h": 495,
+   "w": 960,
+   "h": 1440,
    "by": "Derjochenmeyer",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -980,8 +1010,8 @@ window.PHOTOS = {
   },
   {
    "f": "matcha-latte-da-3.jpg",
-   "w": 330,
-   "h": 438,
+   "w": 960,
+   "h": 1275,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -990,8 +1020,8 @@ window.PHOTOS = {
   },
   {
    "f": "matcha-latte-da-4.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "MichaellaaRubio",
    "lic": "CC BY 4.0",
    "licUrl": "https://creativecommons.org/licenses/by/4.0",
@@ -1002,8 +1032,8 @@ window.PHOTOS = {
  "matcha-dau-do": [
   {
    "f": "matcha-dau-do-1.jpg",
-   "w": 330,
-   "h": 219,
+   "w": 960,
+   "h": 638,
    "by": "cyclonebill from Copenhagen, Denmark",
    "lic": "CC BY-SA 2.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/2.0",
@@ -1012,8 +1042,8 @@ window.PHOTOS = {
   },
   {
    "f": "matcha-dau-do-2.jpg",
-   "w": 330,
-   "h": 438,
+   "w": 960,
+   "h": 1275,
    "by": "Ralff Nestor Nacor",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1022,8 +1052,8 @@ window.PHOTOS = {
   },
   {
    "f": "matcha-dau-do-3.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "MichaellaaRubio",
    "lic": "CC BY 4.0",
    "licUrl": "https://creativecommons.org/licenses/by/4.0",
@@ -1034,8 +1064,8 @@ window.PHOTOS = {
  "houjicha-latte": [
   {
    "f": "houjicha-latte-1.jpg",
-   "w": 330,
-   "h": 438,
+   "w": 960,
+   "h": 1275,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -1056,8 +1086,8 @@ window.PHOTOS = {
  "houjicha-olong-latte": [
   {
    "f": "houjicha-olong-latte-1.jpg",
-   "w": 330,
-   "h": 438,
+   "w": 960,
+   "h": 1275,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -1078,8 +1108,8 @@ window.PHOTOS = {
  "houjicha-macchiato-hat-de": [
   {
    "f": "houjicha-macchiato-hat-de-1.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "FCartegnie",
    "lic": "CC BY-SA 3.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/3.0",
@@ -1088,8 +1118,8 @@ window.PHOTOS = {
   },
   {
    "f": "houjicha-macchiato-hat-de-2.jpg",
-   "w": 330,
-   "h": 330,
+   "w": 960,
+   "h": 960,
    "by": "Francois Mathieu",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1100,8 +1130,8 @@ window.PHOTOS = {
  "chocolate-nong": [
   {
    "f": "chocolate-nong-1.jpg",
-   "w": 330,
-   "h": 330,
+   "w": 960,
+   "h": 960,
    "by": "Emna Mizouni",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1110,8 +1140,8 @@ window.PHOTOS = {
   },
   {
    "f": "chocolate-nong-2.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "KR Chrutti",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1120,8 +1150,8 @@ window.PHOTOS = {
   },
   {
    "f": "chocolate-nong-3.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Maksym Kozlenko",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1130,8 +1160,8 @@ window.PHOTOS = {
   },
   {
    "f": "chocolate-nong-4.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Geoffreyrabbit",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1142,8 +1172,8 @@ window.PHOTOS = {
  "chocolate-da": [
   {
    "f": "chocolate-da-1.jpg",
-   "w": 330,
-   "h": 438,
+   "w": 960,
+   "h": 1275,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -1152,8 +1182,8 @@ window.PHOTOS = {
   },
   {
    "f": "chocolate-da-2.jpg",
-   "w": 330,
-   "h": 438,
+   "w": 960,
+   "h": 1275,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -1162,8 +1192,8 @@ window.PHOTOS = {
   },
   {
    "f": "chocolate-da-3.jpg",
-   "w": 330,
-   "h": 438,
+   "w": 960,
+   "h": 1275,
    "by": "Gpkp",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1174,8 +1204,8 @@ window.PHOTOS = {
  "chocolate-mo-anh-dao": [
   {
    "f": "chocolate-mo-anh-dao-1.jpg",
-   "w": 330,
-   "h": 438,
+   "w": 960,
+   "h": 1275,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -1184,8 +1214,8 @@ window.PHOTOS = {
   },
   {
    "f": "chocolate-mo-anh-dao-2.jpg",
-   "w": 330,
-   "h": 438,
+   "w": 960,
+   "h": 1275,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -1196,8 +1226,8 @@ window.PHOTOS = {
  "chocolate-xoai": [
   {
    "f": "chocolate-xoai-1.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -1206,8 +1236,8 @@ window.PHOTOS = {
   },
   {
    "f": "chocolate-xoai-2.jpg",
-   "w": 330,
-   "h": 438,
+   "w": 960,
+   "h": 1275,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -1218,8 +1248,8 @@ window.PHOTOS = {
  "bo-sua-hanh-nhan": [
   {
    "f": "bo-sua-hanh-nhan-1.jpg",
-   "w": 330,
-   "h": 247,
+   "w": 960,
+   "h": 720,
    "by": "Hoangkid (thảo luận)",
    "lic": "Public domain",
    "licUrl": "",
@@ -1228,8 +1258,8 @@ window.PHOTOS = {
   },
   {
    "f": "bo-sua-hanh-nhan-2.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Alpha from Melbourne, Australia",
    "lic": "CC BY-SA 2.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/2.0",
@@ -1238,8 +1268,8 @@ window.PHOTOS = {
   },
   {
    "f": "bo-sua-hanh-nhan-3.jpg",
-   "w": 330,
-   "h": 438,
+   "w": 960,
+   "h": 1275,
    "by": "Ralff Nestor Nacor",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1248,8 +1278,8 @@ window.PHOTOS = {
   },
   {
    "f": "bo-sua-hanh-nhan-4.jpg",
-   "w": 330,
-   "h": 247,
+   "w": 960,
+   "h": 720,
    "by": "Obsidian Soul",
    "lic": "CC0",
    "licUrl": "",
@@ -1260,8 +1290,8 @@ window.PHOTOS = {
  "mocha-da-xay": [
   {
    "f": "mocha-da-xay-1.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Ewelina Podrez-Siama",
    "lic": "CC BY 2.0",
    "licUrl": "https://creativecommons.org/licenses/by/2.0",
@@ -1270,8 +1300,8 @@ window.PHOTOS = {
   },
   {
    "f": "mocha-da-xay-2.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Ser Amantio di Nicolao",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1280,8 +1310,8 @@ window.PHOTOS = {
   },
   {
    "f": "mocha-da-xay-3.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Kritzolina",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1292,8 +1322,8 @@ window.PHOTOS = {
  "genmaicha-da-xay": [
   {
    "f": "genmaicha-da-xay-1.jpg",
-   "w": 330,
-   "h": 248,
+   "w": 960,
+   "h": 723,
    "by": "Andy Li",
    "lic": "CC0",
    "licUrl": "",
@@ -1302,8 +1332,8 @@ window.PHOTOS = {
   },
   {
    "f": "genmaicha-da-xay-2.jpg",
-   "w": 330,
-   "h": 163,
+   "w": 960,
+   "h": 474,
    "by": "Teabuzzed",
    "lic": "Public domain",
    "licUrl": "",
@@ -1312,8 +1342,8 @@ window.PHOTOS = {
   },
   {
    "f": "genmaicha-da-xay-3.jpg",
-   "w": 330,
-   "h": 220,
+   "w": 960,
+   "h": 640,
    "by": "Matt Gibson Uploaded by Gothick at en.wikipedia",
    "lic": "CC BY-SA 3.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/3.0",
@@ -1324,8 +1354,8 @@ window.PHOTOS = {
  "yogurt-pho-mai-xoai": [
   {
    "f": "yogurt-pho-mai-xoai-1.jpg",
-   "w": 330,
-   "h": 264,
+   "w": 960,
+   "h": 768,
    "by": "Vivekpat30",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1334,8 +1364,8 @@ window.PHOTOS = {
   },
   {
    "f": "yogurt-pho-mai-xoai-2.jpg",
-   "w": 330,
-   "h": 495,
+   "w": 960,
+   "h": 1440,
    "by": "Phương Huy",
    "lic": "CC0",
    "licUrl": "",
@@ -1344,8 +1374,8 @@ window.PHOTOS = {
   },
   {
    "f": "yogurt-pho-mai-xoai-3.jpg",
-   "w": 330,
-   "h": 495,
+   "w": 960,
+   "h": 1441,
    "by": "Bahnfrend",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1354,8 +1384,8 @@ window.PHOTOS = {
   },
   {
    "f": "yogurt-pho-mai-xoai-4.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Misaochan",
    "lic": "CC BY-SA 3.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/3.0",
@@ -1366,8 +1396,8 @@ window.PHOTOS = {
  "yogurt-pho-mai-dau": [
   {
    "f": "yogurt-pho-mai-dau-1.jpg",
-   "w": 330,
-   "h": 450,
+   "w": 960,
+   "h": 1309,
    "by": "Phương Huy",
    "lic": "CC0",
    "licUrl": "",
@@ -1376,8 +1406,8 @@ window.PHOTOS = {
   },
   {
    "f": "yogurt-pho-mai-dau-2.jpg",
-   "w": 330,
-   "h": 250,
+   "w": 960,
+   "h": 727,
    "by": "Nguyen Thi Quynh Tram",
    "lic": "CC BY 3.0",
    "licUrl": "https://creativecommons.org/licenses/by/3.0",
@@ -1386,8 +1416,8 @@ window.PHOTOS = {
   },
   {
    "f": "yogurt-pho-mai-dau-3.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Kyu3a",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1396,8 +1426,8 @@ window.PHOTOS = {
   },
   {
    "f": "yogurt-pho-mai-dau-4.jpg",
-   "w": 330,
-   "h": 440,
+   "w": 960,
+   "h": 1280,
    "by": "Maffeth.opiana",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1408,8 +1438,8 @@ window.PHOTOS = {
  "yogurt-pho-mai-yuzu-dao": [
   {
    "f": "yogurt-pho-mai-yuzu-dao-1.jpg",
-   "w": 330,
-   "h": 247,
+   "w": 960,
+   "h": 720,
    "by": "Ajumeoni",
    "lic": "CC0",
    "licUrl": "",
@@ -1428,8 +1458,8 @@ window.PHOTOS = {
   },
   {
    "f": "yogurt-pho-mai-yuzu-dao-3.jpg",
-   "w": 330,
-   "h": 330,
+   "w": 960,
+   "h": 960,
    "by": "Jeonghyeonseo",
    "lic": "CC BY-SA 4.0",
    "licUrl": "https://creativecommons.org/licenses/by-sa/4.0",

@@ -35,6 +35,11 @@
     cards: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="15" rx="2.5"/><path d="M8 3h10.5A2.5 2.5 0 0 1 21 5.5V17"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h9"/></svg>',
     spark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18.5 9.5l-4.7 1.9L12 16l-1.8-4.6L5.5 9.5l4.7-1.9L12 3Z"/><path d="M18.5 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8.8-2Z"/></svg>',
+    chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.1A8 8 0 1 1 20 12Z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01" stroke-width="2.6"/></svg>',
+    filter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+    snow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M4.9 6.5l14.2 11M19.1 6.5 4.9 17.5"/></svg>',
+    home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-8Z"/></svg>',
+    ice: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 4v16M15 4v16"/></svg>',
     jar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10M8 3v3l-2 3v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9l-2-3V3"/><path d="M6 13h12"/></svg>',
     search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
     x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
@@ -234,27 +239,26 @@
     { id: "mon", label: "Món", icon: I.cup },
     { id: "hoc", label: "Học nhanh", icon: I.cards },
     { id: "kiem-tra", label: "Kiểm tra", icon: I.check },
-    { id: "hoi-ai", label: "Hỏi AI", icon: I.spark },
     { id: "ban-thanh-pham", label: "Bán TP", icon: I.jar }
   ];
   function renderTabs(active) {
     $("#tabbar").innerHTML = `<div class="tabbar-inner">` + TABS.map((t) =>
-      `<a class="tab${t.id === "hoi-ai" ? " tab-ai" : ""}" href="#${t.id}" ${t.id === active ? 'aria-current="page"' : ""}>${t.icon}<span>${t.label}</span></a>`).join("") + `</div>`;
+      `<a class="tab" href="#${t.id}" ${t.id === active ? 'aria-current="page"' : ""}>${t.icon}<span>${t.label}</span></a>`).join("") + `</div>`;
   }
 
   let aiAbort = null;
   function route() {
     const h = decodeURIComponent((location.hash || "").slice(1));
-    if (aiAbort && !h.startsWith("hoi-ai")) { /* keep running answers when leaving; nothing to do */ }
     let tab = "mon";
     if (h.startsWith("mon-") && byId[h.slice(4)]) { tab = "mon"; renderDetail(h.slice(4)); }
     else if (h === "hoc") { tab = "hoc"; renderLearn(); }
     else if (h === "kiem-tra") { tab = "kiem-tra"; renderQuiz(); }
-    else if (h === "hoi-ai") { tab = "hoi-ai"; renderAI(); }
+    else if (h === "hoi-ai") { renderHome(); history.replaceState(null, "", "#mon"); setTimeout(() => openChat({}), 0); }
     else if (h === "ban-thanh-pham" || h.startsWith("btp-")) { tab = "ban-thanh-pham"; renderPreps(h.startsWith("btp-") ? h.slice(4) : null); }
     else if (h === "nguon-anh") { tab = ""; renderCredits(); }
     else { renderHome(); }
     renderTabs(tab);
+    chatOnRoute();
     if (!h.startsWith("btp-")) window.scrollTo(0, 0);
   }
   window.addEventListener("hashchange", route);
@@ -262,20 +266,21 @@
   function setTitle(t) { document.title = t ? `${t} · Sổ tay pha chế` : "Sổ tay pha chế"; }
 
   /* ───────── HOME ───────── */
-  const homeState = { q: "", cat: store.get("cat", "all") };
+  const homeState = Object.assign({ q: "", cat: "all", temp: "all", prog: "all" }, store.get("filter", {}));
   function progressRing(done, total) {
     const r = 22, c = 2 * Math.PI * r, f = total ? done / total : 0;
     return `<svg class="ring" viewBox="0 0 54 54"><circle class="ring-bg" cx="27" cy="27" r="${r}"/><circle class="ring-fg" cx="27" cy="27" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - f)}"/><text x="27" y="32" text-anchor="middle">${Math.round(f * 100)}%</text></svg>`;
   }
-  function drinkCard(d) {
+  /* Một dòng món gọn: ảnh nhỏ · tên · nhãn · công thức rút gọn */
+  function drinkRow(d) {
     const p = photosOf(d.id)[0];
-    return `<a class="card drink-card" href="#mon-${d.id}">
-      <div class="ph">${p ? imgTag(p, { sizes: "(min-width: 980px) 260px, (min-width: 640px) 33vw, 50vw", alt: d.name }) : ""}
-        <div class="mini-cup">${cupSVG(d, { cls: "" })}</div></div>
-      ${learned.has(d.id) ? `<span class="done-flag" title="Đã thuộc">${I.ok}</span>` : ""}
-      <div class="body"><div class="badges">${tempBadge(d)}${sizeBadge(d)}</div><h3>${esc(d.name)}</h3><div class="formula num">${esc(formulaLine(d))}</div></div>
+    return `<a class="drink-row" href="#mon-${d.id}">
+      <span class="dr-ph">${p ? `<img src="images/drinks/thumb/${esc(p.f)}" alt="" loading="lazy" decoding="async">` : cupSVG(d, { cls: "" })}${learned.has(d.id) ? `<span class="dr-done" title="Đã thuộc">${I.ok}</span>` : ""}</span>
+      <span class="dr-main"><b>${esc(d.name)}</b><span class="dr-badges">${tempBadge(d)}${sizeBadge(d)}</span><small class="num">${esc(formulaLine(d))}</small></span>
+      <span class="chev" aria-hidden="true">${I.next}</span>
     </a>`;
   }
+  let openCats = new Set(store.get("openCats", []));
   function matchDrink(d, q) {
     if (!q) return true;
     const hay = norm([d.name, ...(d.aka || []), ...d.ing.map((i) => i.n), catById[d.cat].name].join(" | "));
@@ -288,42 +293,107 @@
     view.innerHTML = `
       <section class="section">
         <div class="hello"><span class="eyebrow">${hi}</span><h1>Hôm nay mình học món gì?</h1></div>
-        <label class="search" for="q">${I.search}<input id="q" type="search" placeholder="Tìm món, nguyên liệu…" value="${esc(homeState.q)}" autocomplete="off" enterkeyhint="search"><button class="clear" type="button" aria-label="Xoá tìm kiếm" ${homeState.q ? "" : "hidden"}>${I.x}</button></label>
-        <div class="chips" role="toolbar" aria-label="Lọc theo nhóm">
-          <button class="chip" data-cat="all" aria-pressed="${homeState.cat === "all"}">Tất cả · ${drinks.length}</button>
-          ${MENU.categories.map((c) => `<button class="chip" data-cat="${c.id}" aria-pressed="${homeState.cat === c.id}">${esc(c.short)}</button>`).join("")}
+        <div class="search-row">
+          <label class="search" for="q">${I.search}<input id="q" type="search" placeholder="Tìm món, nguyên liệu…" value="${esc(homeState.q)}" autocomplete="off" enterkeyhint="search"><button class="clear" type="button" aria-label="Xoá tìm kiếm" ${homeState.q ? "" : "hidden"}>${I.x}</button></label>
+          <button class="filter-btn" id="filter-btn" type="button" aria-haspopup="dialog" aria-label="Bộ lọc">${I.filter}<span class="fcount" id="fcount" hidden></span></button>
         </div>
+        <div class="active-filters" id="active-filters"></div>
         <div class="progress-card">${progressRing(learned.size, drinks.length)}
           <div><b>Đã thuộc ${learned.size}/${drinks.length} món</b><div class="muted small">Lật thẻ để ôn, làm bài kiểm tra để chắc tay.</div>
           <div class="actions"><a class="link-btn" href="#hoc">Ôn bằng thẻ →</a><a class="link-btn" href="#kiem-tra">Làm kiểm tra →</a></div></div></div>
       </section>
       <div id="list"></div>
-      <div class="footer-note"><span>Công thức theo ${esc(MENU.source)}.</span><span>Ảnh là ảnh chụp thật lấy từ Wikimedia Commons, minh hoạ kiểu món. <a href="#nguon-anh">Nguồn ảnh &amp; tác giả</a></span></div>`;
+      <div class="footer-note"><span>Công thức theo ${esc(MENU.source)}.</span></div>`;
     const input = $("#q"), clear = $(".search .clear");
     input.addEventListener("input", () => { homeState.q = input.value; clear.hidden = !input.value; renderList(); });
     clear.addEventListener("click", () => { homeState.q = ""; input.value = ""; clear.hidden = true; renderList(); input.focus(); });
-    $$(".chip[data-cat]").forEach((b) => b.addEventListener("click", () => {
-      homeState.cat = b.dataset.cat; store.set("cat", homeState.cat);
-      $$(".chip[data-cat]").forEach((x) => x.setAttribute("aria-pressed", x === b));
-      renderList();
-    }));
+    $("#filter-btn").addEventListener("click", openFilter);
     renderList();
+  }
+
+  /* ───────── Bộ lọc món (1 nút → bảng chọn) ───────── */
+  const TEMP_OPTS = [["all", "Tất cả"], ["hot", "Nóng"], ["ice", "Đá"], ["blend", "Đá xay"]];
+  const PROG_OPTS = [["all", "Tất cả"], ["todo", "Chưa thuộc"], ["done", "Đã thuộc"]];
+  const filterCount = () => (homeState.cat !== "all") + (homeState.temp !== "all") + (homeState.prog !== "all");
+  const passFilter = (d) => (homeState.cat === "all" || d.cat === homeState.cat) && (homeState.temp === "all" || d.temp === homeState.temp) &&
+    (homeState.prog === "all" || (homeState.prog === "done") === learned.has(d.id));
+  function drawFilterSummary() {
+    const n = filterCount(), fc = $("#fcount"), box = $("#active-filters");
+    if (!fc || !box) return;
+    fc.hidden = !n; fc.textContent = n;
+    $("#filter-btn").classList.toggle("on", n > 0);
+    const parts = [];
+    if (homeState.cat !== "all") parts.push(catById[homeState.cat].short);
+    if (homeState.temp !== "all") parts.push(TEMP_OPTS.find((x) => x[0] === homeState.temp)[1]);
+    if (homeState.prog !== "all") parts.push(PROG_OPTS.find((x) => x[0] === homeState.prog)[1]);
+    box.innerHTML = n ? `<span>Đang lọc: <b>${parts.map(esc).join(" · ")}</b></span><button type="button" class="link-btn" id="clear-filter">Bỏ lọc</button>` : "";
+    const c = $("#clear-filter");
+    if (c) c.addEventListener("click", () => { homeState.cat = "all"; homeState.temp = "all"; homeState.prog = "all"; saveFilter(); renderList(); });
+  }
+  function saveFilter() { store.set("filter", { cat: homeState.cat, temp: homeState.temp, prog: homeState.prog }); }
+  function openFilter() {
+    const draft = { cat: homeState.cat, temp: homeState.temp, prog: homeState.prog };
+    const wrap = document.createElement("div");
+    wrap.className = "sheet-wrap";
+    const opt = (name, val, label, cur) => `<button type="button" class="opt-chip" data-k="${name}" data-v="${val}" aria-pressed="${cur === val}">${esc(label)}</button>`;
+    const count = () => drinks.filter((d) => (draft.cat === "all" || d.cat === draft.cat) && (draft.temp === "all" || d.temp === draft.temp) && (draft.prog === "all" || (draft.prog === "done") === learned.has(d.id))).length;
+    const draw = () => {
+      wrap.innerHTML = `<div class="sheet-backdrop" data-close></div>
+        <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="f-title">
+          <header class="sheet-head"><b id="f-title">Bộ lọc</b><button class="icon-btn" type="button" data-close aria-label="Đóng">${I.x}</button></header>
+          <div class="sheet-body">
+            <div class="f-group"><div class="eyebrow">Nhóm món</div><div class="opt-wrap">${opt("cat", "all", "Tất cả", draft.cat)}${MENU.categories.map((c) => opt("cat", c.id, c.short, draft.cat)).join("")}</div></div>
+            <div class="f-group"><div class="eyebrow">Loại</div><div class="opt-wrap">${TEMP_OPTS.map(([v, l]) => opt("temp", v, l, draft.temp)).join("")}</div></div>
+            <div class="f-group"><div class="eyebrow">Tiến độ học</div><div class="opt-wrap">${PROG_OPTS.map(([v, l]) => opt("prog", v, l, draft.prog)).join("")}</div></div>
+          </div>
+          <footer class="sheet-foot"><button class="btn btn-ghost" type="button" id="f-reset">Xoá lọc</button><button class="btn btn-primary" type="button" id="f-apply">Xem ${count()} món</button></footer>
+        </section>`;
+      $$("[data-close]", wrap).forEach((b) => b.addEventListener("click", close));
+      $$(".opt-chip", wrap).forEach((b) => b.addEventListener("click", () => { draft[b.dataset.k] = b.dataset.v; draw(); }));
+      $("#f-reset", wrap).addEventListener("click", () => { draft.cat = "all"; draft.temp = "all"; draft.prog = "all"; draw(); });
+      $("#f-apply", wrap).addEventListener("click", () => { Object.assign(homeState, draft); saveFilter(); renderList(); close(); });
+    };
+    const onKey = (e) => { if (e.key === "Escape") close(); };
+    function close() { document.removeEventListener("keydown", onKey); document.body.classList.remove("chat-lock"); wrap.remove(); const fb = $("#filter-btn"); if (fb) fb.focus({ preventScroll: true }); }
+    document.addEventListener("keydown", onKey);
+    document.body.classList.add("chat-lock");
+    document.body.appendChild(wrap);
+    draw();
+    $("#f-apply", wrap).focus({ preventScroll: true });
   }
   function renderList() {
     const list = $("#list");
     const q = homeState.q.trim();
     const cats = MENU.categories.filter((c) => homeState.cat === "all" || c.id === homeState.cat);
+    const auto = !!q || filterCount() > 0; // đang tìm/lọc thì mở sẵn các nhóm có kết quả
     let html = "", n = 0;
     cats.forEach((c) => {
-      const ds = drinks.filter((d) => d.cat === c.id && matchDrink(d, q));
+      const ds = drinks.filter((d) => d.cat === c.id && passFilter(d) && matchDrink(d, q));
       if (!ds.length) return;
       n += ds.length;
-      html += `<section class="cat-block"><h2>${esc(c.name)} <span class="count">${ds.length} món</span></h2><div class="grid">${ds.map(drinkCard).join("")}</div></section>`;
+      const all = drinks.filter((d) => d.cat === c.id);
+      const done = all.filter((d) => learned.has(d.id)).length;
+      const faces = ds.slice(0, 3).map((d) => photosOf(d.id)[0]).filter(Boolean);
+      html += `<details class="cat-acc" data-cat="${c.id}" ${auto || openCats.has(c.id) ? "open" : ""}>
+        <summary>
+          <span class="faces">${faces.map((p) => `<img src="images/drinks/thumb/${esc(p.f)}" alt="" loading="lazy" decoding="async">`).join("")}</span>
+          <span class="cat-main"><b>${esc(c.name)}</b><small>${ds.length} món${done ? ` · đã thuộc ${done}/${all.length}` : ""}</small></span>
+          <span class="chev" aria-hidden="true">${I.next}</span>
+        </summary>
+        <div class="drink-rows">${ds.map(drinkRow).join("")}</div>
+      </details>`;
     });
-    if (!n) html = `<div class="empty"><div>Không thấy món nào khớp “${esc(q)}”.</div><a class="btn btn-primary" href="#hoi-ai" data-ask="${esc(q)}">${I.spark} Hỏi trợ lý AI</a></div>`;
-    list.innerHTML = html;
+    if (!n) html = q
+      ? `<div class="empty"><div>Không thấy món nào khớp “${esc(q)}”${filterCount() ? " trong bộ lọc đang chọn" : ""}.</div><button class="btn btn-primary" type="button" data-ask="${esc(q)}">${I.chat} Hỏi trợ lý AI</button></div>`
+      : `<div class="empty"><div>Không có món nào với bộ lọc này.</div></div>`;
+    list.innerHTML = html ? `<div class="cat-list">${html}</div>` : html;
+    drawFilterSummary();
+    if (!auto) $$("details.cat-acc", list).forEach((el) => el.addEventListener("toggle", () => {
+      if (el.open) openCats.add(el.dataset.cat); else openCats.delete(el.dataset.cat);
+      store.set("openCats", Array.from(openCats));
+    }));
     const askBtn = $("[data-ask]", list);
-    if (askBtn) askBtn.addEventListener("click", () => { pendingAsk = askBtn.dataset.ask; });
+    if (askBtn) askBtn.addEventListener("click", () => openChat({ drink: null, prefill: askBtn.dataset.ask }));
   }
 
   /* ───────── DETAIL ───────── */
@@ -396,7 +466,7 @@
           ${relatedPreps.length ? `<section class="section"><div class="section-head"><h2>Bán thành phẩm cần có</h2></div><div class="related">${relatedPreps.map((p) => `<a href="#btp-${p}"><span>${esc(prepById[p].name)} <span class="muted small">· để ${esc(prepById[p].shelf)}</span></span>${I.next}</a>`).join("")}</div></section>` : ""}
           <div class="btn-row">
             <button class="btn ${learned.has(d.id) ? "btn-ghost" : "btn-good"}" type="button" id="toggle-learn">${I.ok} ${learned.has(d.id) ? "Bỏ đánh dấu đã thuộc" : "Đánh dấu đã thuộc"}</button>
-            <a class="btn btn-primary" href="#hoi-ai" id="ask-this">${I.spark} Hỏi AI về món này</a>
+            <button class="btn btn-primary" type="button" id="ask-this">${I.chat} Hỏi AI về món này</button>
           </div>
           <a class="btn btn-ghost btn-block" href="#kiem-tra" id="quiz-this">${I.check} Kiểm tra riêng món này</a>
         </div>
@@ -409,7 +479,7 @@
       if (learned.has(id)) learned.delete(id); else { learned.add(id); toast("Tuyệt! Đã thêm vào danh sách đã thuộc."); }
       saveLearned(); const y = window.scrollY; renderDetail(id); window.scrollTo(0, y);
     });
-    $("#ask-this").addEventListener("click", () => { pendingAsk = `Hướng dẫn mình pha ${d.name} thật chi tiết${d.sizes && d.sizes.length > 1 ? " (cả size M và L)" : ""}, kèm mẹo để nhớ nhanh công thức.`; });
+    $("#ask-this").addEventListener("click", () => openChat({ drink: id }));
     $("#quiz-this").addEventListener("click", () => { quizFocus = id; });
   }
 
@@ -631,34 +701,69 @@
     }));
   }
 
-  /* ───────── PREPS ───────── */
+  /* ───────── PREPS (gọn: 2 thẻ chuyển, danh sách nhóm, hạn dùng dạng nhãn màu) ───────── */
+  const prepState = { view: "nen", q: "" };
+  const hoursOf = (s) => { const n = parseFloat(s); return /ngày/.test(s) ? n * 24 : n; };
+  const datePill = (s) => { const h = hoursOf(s); return `<span class="pill ${h <= 24 ? "pill-short" : h <= 72 ? "pill-mid" : "pill-long"} num">${esc(s)}</span>`; };
+  const PREP_GROUPS = [["Nền trà trái cây", "Nền trà trái cây"], ["Nền trà sữa", "Nền trà sữa"], ["Nền milk foam", "Milk foam"], ["Các loại khác", "Khác"]];
+  const STORE_GROUPS = [
+    { key: "mát", label: "Tủ mát", sub: "dưới 5°C", icon: I.snow, cls: "cold" },
+    { key: "phòng", label: "Nhiệt độ phòng", sub: "dưới 25°C", icon: I.home, cls: "room" },
+    { key: "đông", label: "Tủ đông", sub: "dưới 2°C", icon: I.ice, cls: "frozen" }
+  ];
+
   function renderPreps(openId) {
     setTitle("Bán thành phẩm");
-    const groups = uniq(MENU.preps.map((p) => p.group));
-    view.innerHTML = `<div class="hello"><span class="eyebrow">Chuẩn bị đầu ca</span><h1>Bán thành phẩm &amp; hạn dùng</h1></div>
-      ${groups.map((g) => `<section class="prep-group"><h2>${esc(g)}</h2>${MENU.preps.filter((p) => p.group === g).map((p) => {
-        const used = drinks.filter((d) => d.ing.some((i) => i.p === p.id));
-        return `<details class="prep" id="btp-${p.id}" ${p.id === openId ? "open" : ""}>
-          <summary><div><b>${esc(p.name)}</b><small>Để được ${esc(p.shelf)} · tủ mát</small></div><div class="yield num">${esc(p.yield)}</div></summary>
-          <div class="inner"><ul class="ing-list">${p.ing.map((i) => `<li><span class="dot" style="background:var(--surface-3)"></span><div class="name">${esc(i[0])}</div><div class="qty num">${esc(i[2])}<span>${esc(i[1])}</span></div></li>`).join("")}</ul>
-          <ol>${p.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>
-          ${(p.notes || []).map((n) => `<div class="note">${I.info}<div>${esc(n)}</div></div>`).join("")}
-          ${used.length ? `<div class="muted small">Dùng cho: ${used.map((d) => `<a href="#mon-${d.id}">${esc(d.name)}</a>`).join(", ")}</div>` : ""}</div></details>`;
-      }).join("")}</section>`).join("")}
-      <section class="prep-group"><h2>Bảng date nguyên vật liệu</h2>
-        <label class="search" for="shelf-q">${I.search}<input id="shelf-q" type="search" placeholder="Tìm nguyên liệu, vd: sữa đặc" autocomplete="off"></label>
-        <div class="table-wrap"><table><thead><tr><th>Nguyên liệu</th><th>Date</th><th>Bảo quản</th></tr></thead><tbody id="shelf-body"></tbody></table></div>
-      </section>`;
-    const body = $("#shelf-body");
-    const draw = (q) => {
-      body.innerHTML = MENU.shelf.filter((r) => !q || norm(r.join(" ")).includes(norm(q))).map((r) => `<tr><td><b>${esc(r[0])}</b><div class="muted small">${esc(r[1])}</div></td><td class="date num">${esc(r[2])}</td><td class="${/mát|đông/.test(r[3]) ? "cold" : "room"}">${esc(r[3])}</td></tr>`).join("") || `<tr><td colspan="3" class="muted">Không có nguyên liệu khớp.</td></tr>`;
-    };
-    draw("");
-    $("#shelf-q").addEventListener("input", (e) => draw(e.target.value));
+    if (openId) prepState.view = "nen";
+    view.innerHTML = `
+      <div class="prep-top">
+        <div class="hello"><span class="eyebrow">Chuẩn bị đầu ca</span><h1>Bán thành phẩm</h1></div>
+        <div class="seg seg-full" role="tablist" aria-label="Chọn mục">
+          <button type="button" role="tab" data-v="nen" aria-pressed="${prepState.view === "nen"}" aria-selected="${prepState.view === "nen"}">Công thức nền <span class="cnt">${MENU.preps.length}</span></button>
+          <button type="button" role="tab" data-v="date" aria-pressed="${prepState.view === "date"}" aria-selected="${prepState.view === "date"}">Hạn dùng <span class="cnt">${MENU.shelf.length}</span></button>
+        </div>
+        <label class="search" for="prep-q">${I.search}<input id="prep-q" type="search" placeholder="${prepState.view === "nen" ? "Tìm, vd: milk foam, thạch" : "Tìm, vd: sữa đặc, trân châu"}" value="${esc(prepState.q)}" autocomplete="off"></label>
+      </div>
+      <div id="prep-list"></div>`;
+    $$(".seg-full button").forEach((b) => b.addEventListener("click", () => { prepState.view = b.dataset.v; prepState.q = ""; renderPreps(); }));
+    $("#prep-q").addEventListener("input", (e) => { prepState.q = e.target.value; drawPrepList(); });
+    drawPrepList(openId);
     if (openId) {
       const el = document.getElementById("btp-" + openId);
-      if (el) { el.classList.add("flash-hl"); setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 60); setTimeout(() => el.classList.remove("flash-hl"), 2200); }
+      if (el) { el.open = true; el.classList.add("flash-hl"); setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 60); setTimeout(() => el.classList.remove("flash-hl"), 2200); }
     } else window.scrollTo(0, 0);
+  }
+
+  function drawPrepList(openId) {
+    const box = $("#prep-list");
+    const q = norm(prepState.q);
+    if (prepState.view === "nen") {
+      const match = (p) => !q || norm([p.name, p.group, ...p.ing.map((i) => i[0])].join(" ")).includes(q);
+      box.innerHTML = PREP_GROUPS.map(([g, label]) => {
+        const ps = MENU.preps.filter((p) => p.group === g && match(p));
+        if (!ps.length) return "";
+        return `<section class="group"><h2 class="group-h">${esc(label)}<span>${ps.length}</span></h2><div class="list-card">${ps.map((p) => {
+          const used = drinks.filter((d) => d.ing.some((i) => i.p === p.id));
+          return `<details class="row-d" id="btp-${p.id}" ${p.id === openId ? "open" : ""}>
+            <summary><div class="row-main"><b>${esc(p.name)}</b><small>Ra <span class="num">${esc(p.yield)}</span></small></div>${datePill(p.shelf)}<span class="chev" aria-hidden="true">${I.next}</span></summary>
+            <div class="row-body">
+              <ul class="kv">${p.ing.map((i) => `<li><span>${esc(i[0])}</span><b class="num">${esc(i[2])} <small>${esc(i[1])}</small></b></li>`).join("")}</ul>
+              <ol class="mini-steps">${p.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>
+              ${(p.notes || []).map((n) => `<div class="note">${I.info}<div>${esc(n)}</div></div>`).join("")}
+              ${used.length ? `<div class="used">Dùng cho: ${used.map((d) => `<a href="#mon-${d.id}">${esc(d.name)}</a>`).join(" · ")}</div>` : ""}
+            </div></details>`;
+        }).join("")}</div></section>`;
+      }).join("") || `<div class="empty">Không có bán thành phẩm khớp “${esc(prepState.q)}”.</div>`;
+    } else {
+      const rows = MENU.shelf.filter((r) => !q || norm(r.join(" ")).includes(q));
+      box.innerHTML = `<div class="legend-pills"><span class="pill pill-short">≤ 24 tiếng</span><span class="pill pill-mid">2–3 ngày</span><span class="pill pill-long">4 ngày trở lên</span></div>` +
+        STORE_GROUPS.map((g) => {
+          const rs = rows.filter((r) => r[3].toLowerCase().includes(g.key)).sort((a, b) => hoursOf(a[2]) - hoursOf(b[2]));
+          if (!rs.length) return "";
+          return `<section class="group"><h2 class="group-h"><span class="g-ico ${g.cls}">${g.icon}</span>${esc(g.label)} <small>${esc(g.sub)}</small><span>${rs.length}</span></h2><div class="list-card">${rs.map((r) =>
+            `<div class="row"><div class="row-main"><b>${esc(r[0])}</b><small>${esc(r[1])}</small></div>${datePill(r[2])}</div>`).join("")}</div></section>`;
+        }).join("") || `<div class="empty">Không có nguyên liệu khớp “${esc(prepState.q)}”.</div>`;
+    }
   }
 
   /* ───────── CREDITS ───────── */
@@ -671,93 +776,131 @@
       <div class="credits">${all.map(({ p, d }) => `<figure><img src="images/drinks/thumb/${esc(p.f)}" alt="" loading="lazy" decoding="async"><figcaption><b>${esc(d.name)}</b><br>${esc(p.by || "Không rõ tác giả")}<br>${esc(p.lic || "")} · <a href="${esc(p.src)}" target="_blank" rel="noopener">trang gốc</a></figcaption></figure>`).join("")}</div>`;
   }
 
-  /* ───────── AI ASSISTANT ───────── */
-  let pendingAsk = null;
-  const chat = { turns: [], busy: false, mode: null, sample: null, modeReady: null };
+  /* ───────── AI ASSISTANT — bong bóng nổi ───────── */
+  const chat = { turns: [], busy: false, sample: null, inClaude: false, useClaude: store.get("useClaude", false), ready: null, ctx: null, open: false };
+  const isWide = () => window.matchMedia("(min-width: 900px)").matches;
 
-  function detectMode() {
-    if (chat.modeReady) return chat.modeReady;
-    chat.modeReady = (async () => {
-      try {
-        if (window.claude && typeof window.claude.use === "function") {
-          const s = await window.claude.use("sample");
-          if (s) { chat.sample = s; chat.mode = "claude"; return chat.mode; }
-        }
-      } catch (e) { /* không có Claude trong trang này */ }
-      chat.mode = CONFIG.aiProxyUrl ? "proxy" : "offline";
-      return chat.mode;
+  function detectAI() {
+    if (chat.ready) return chat.ready;
+    chat.ready = (async () => {
+      chat.inClaude = !!(window.claude && typeof window.claude.use === "function");
+      if (chat.inClaude) { try { chat.sample = await window.claude.use("sample"); } catch (e) { chat.sample = null; } }
+      return aiMode();
     })();
-    return chat.modeReady;
+    return chat.ready;
+  }
+  // Trang trong Claude: chỉ dùng Claude khi người dùng tự bật. Trang web thường: dùng Worker (Groq/Gemini) nếu đã cấu hình.
+  function aiMode() {
+    if (chat.sample && chat.useClaude) return "claude";
+    if (!chat.inClaude && CONFIG.aiProxyUrl) return "proxy";
+    return "offline";
   }
 
-  function contextText() {
-    const lines = [];
-    lines.push(`NGUỒN: ${MENU.source}. Đơn vị giữ nguyên như tài liệu.`);
-    MENU.categories.forEach((c) => {
-      lines.push(`\n## NHÓM: ${c.name}`);
-      drinks.filter((d) => d.cat === c.id).forEach((d) => {
-        const sz = d.sizes ? `size ${d.sizes.join("/")}` : "không chia size";
-        lines.push(`\n### ${d.name} [id: ${d.id}] — ${d.temp === "hot" ? "nóng" : d.temp === "blend" ? "đá xay" : "đá"} — ${sz}`);
-        if (d.aka) lines.push(`Tên gọi khác: ${d.aka.join(", ")}`);
-        lines.push("Thành phần: " + d.ing.map((i) => {
-          const q = typeof i.q === "object" ? Object.entries(i.q).map(([s, v]) => `${s} ${v}`).join(" / ") : i.q;
-          return `${i.n}: ${q} ${i.u}${i.side ? " (phục vụ kèm)" : ""}`;
-        }).join("; "));
-        lines.push("Dụng cụ/packaging: " + (Array.isArray(d.pack) ? d.pack.join(", ") : Object.entries(d.pack).map(([s, v]) => `${s}: ${v.join(", ")}`).join(" | ")));
-        lines.push("Các bước: " + d.steps.map((s, i) => `${i + 1}) ${s}`).join(" "));
-        if (d.notes) lines.push("Lưu ý: " + d.notes.join(" "));
-      });
-    });
-    lines.push("\n## BÁN THÀNH PHẨM");
-    MENU.preps.forEach((p) => {
-      lines.push(`\n### ${p.name} [id: ${p.id}] — nhóm ${p.group} — thành phẩm ${p.yield} — date ${p.shelf}`);
-      lines.push("Nguyên liệu: " + p.ing.map((i) => `${i[0]} ${i[2]} ${i[1]}`).join("; "));
-      lines.push("Các bước: " + p.steps.map((s, i) => `${i + 1}) ${s}`).join(" "));
-      if (p.notes) lines.push("Lưu ý: " + p.notes.join(" "));
-    });
-    lines.push("\n## BẢNG DATE NGUYÊN VẬT LIỆU (tên | tình trạng | date | nơi bảo quản)");
+  /* tìm món được nhắc tới trong câu hỏi */
+  function findDrinks(question) {
+    const q = " " + norm(question) + " ";
+    return drinks.map((d) => {
+      let s = 0;
+      [d.name, ...(d.aka || [])].forEach((n) => { const nn = norm(n); if (q.includes(" " + nn + " ") || q.includes(nn)) s = Math.max(s, nn.length + 10); });
+      if (!s) { const words = norm(d.name).split(" ").filter((w) => w.length > 2); const hit = words.filter((w) => q.includes(" " + w + " ") || q.includes(" " + w)).length; if (hit >= Math.max(2, words.length - 1)) s = hit * 3; }
+      return { d, s };
+    }).filter((x) => x.s > 0).sort((a, b) => b.s - a.s);
+  }
+
+  function drinkDetail(d) {
+    const sz = d.sizes ? `size ${d.sizes.join("/")}` : "không chia size";
+    const out = [`### ${d.name} [id: ${d.id}] — ${catById[d.cat].name} — ${d.temp === "hot" ? "nóng" : d.temp === "blend" ? "đá xay" : "đá"} — ${sz}`];
+    out.push("Thành phần: " + d.ing.map((i) => `${i.n}: ${typeof i.q === "object" ? Object.entries(i.q).map(([s, v]) => `${s} ${v}`).join(" / ") : i.q} ${i.u}${i.side ? " (phục vụ kèm)" : ""}`).join("; "));
+    out.push("Dụng cụ/packaging: " + (Array.isArray(d.pack) ? d.pack.join(", ") : Object.entries(d.pack).map(([s, v]) => `${s}: ${v.join(", ")}`).join(" | ")));
+    out.push("Các bước: " + d.steps.map((s, i) => `${i + 1}) ${s}`).join(" "));
+    if (d.notes) out.push("Lưu ý: " + d.notes.join(" "));
+    return out.join("\n");
+  }
+  function prepDetail(p) {
+    return `### ${p.name} [id: ${p.id}] — ${p.group} — thành phẩm ${p.yield} — date ${p.shelf}\nNguyên liệu: ${p.ing.map((i) => `${i[0]} ${i[2]} ${i[1]}`).join("; ")}\nCác bước: ${p.steps.map((s, i) => `${i + 1}) ${s}`).join(" ")}${p.notes ? "\nLưu ý: " + p.notes.join(" ") : ""}`;
+  }
+  /* Chỉ gửi phần dữ liệu liên quan tới câu hỏi để tiết kiệm token. */
+  function contextFor(question, ctxId) {
+    const q = norm(question);
+    const lines = [`NGUỒN: ${MENU.source}. Đơn vị giữ nguyên như tài liệu.`, "", "## DANH SÁCH MÓN (tóm tắt: tên [id] · nhóm · loại · size · dụng cụ · nguyên liệu)"];
+    drinks.forEach((d) => lines.push(`- ${d.name} [${d.id}] · ${catById[d.cat].short} · ${d.temp === "hot" ? "nóng" : d.temp === "blend" ? "đá xay" : "đá"} · ${d.sizes ? "size " + d.sizes.join("/") : "1 size"} · ${packOf(d, d.sizes ? d.sizes[d.sizes.length - 1] : null).join("/")} · ${d.ing.filter((i) => !i.side && i.k !== "decor").map((i) => i.n).join(", ")}`));
+    const picked = uniq([ctxId, ...findDrinks(question).slice(0, 4).map((x) => x.d.id)].filter(Boolean));
+    const ingHit = allIngNames.filter((n) => q.includes(norm(n))).sort((a, b) => b.length - a.length)[0];
+    if (ingHit && /mon nao|nhung mon|cac mon|mon gi/.test(q)) drinks.filter((d) => d.ing.some((i) => i.n === ingHit)).slice(0, 8).forEach((d) => { if (!picked.includes(d.id)) picked.push(d.id); });
+    if (picked.length) { lines.push("", "## CHI TIẾT CÔNG THỨC (định lượng chính xác)"); picked.forEach((id) => lines.push(drinkDetail(byId[id]))); }
+    let preps = MENU.preps.filter((p) => q.includes(norm(p.name)) || picked.some((id) => byId[id].ing.some((i) => i.p === p.id)));
+    if (!preps.length && /ban thanh pham|nen |milk foam|thach|pudding|bo xay|nuoc chanh|cold brew|tra sua|\bu\b/.test(q)) preps = MENU.preps;
+    if (preps.length) { lines.push("", "## BÁN THÀNH PHẨM"); preps.forEach((p) => lines.push(prepDetail(p))); }
+    lines.push("", "## BẢNG DATE NGUYÊN VẬT LIỆU (tên | tình trạng | date | nơi bảo quản)");
     MENU.shelf.forEach((r) => lines.push(r.join(" | ")));
     return lines.join("\n");
   }
 
   const RULES = `Bạn là "Trợ lý pha chế" của quán, giúp nhân viên (kể cả người mới) học và tra công thức đồ uống.
 Quy tắc:
-- Trả lời bằng tiếng Việt, thân thiện, rõ ràng, ngắn gọn; xưng "mình", gọi người hỏi là "bạn".
-- Định lượng, dụng cụ, các bước, hạn dùng: CHỈ lấy từ DỮ LIỆU CÔNG THỨC bên dưới, không bịa số. Món chỉ có một size thì nói rõ.
-- Câu hỏi ngoài tài liệu (kỹ thuật barista chung, mẹo, giải thích vì sao…): được trả lời bằng kiến thức chung, nhưng nói rõ "Phần này tài liệu của quán không ghi, đây là kinh nghiệm chung".
-- Khi nói về một món có trong dữ liệu, đặt thẻ [[mon:ID]] trên một dòng riêng ngay sau đoạn nói về món đó — trang web sẽ hiện ảnh thật và hình ly minh hoạ tại vị trí thẻ. Mỗi món tối đa 1 thẻ, tối đa 4 thẻ cho cả câu trả lời. Bán thành phẩm dùng thẻ [[btp:ID]]. ID phải đúng như trong dữ liệu.
-- Khi đưa công thức: liệt kê thành phần kèm định lượng (theo từng size nếu có), packaging, rồi các bước đánh số 1. 2. 3.
-- Định dạng Markdown đơn giản: **đậm**, gạch đầu dòng "- ", danh sách số "1. ", tiêu đề nhỏ "### ". Không dùng bảng, không dùng HTML.
-- Nếu người dùng gửi lời chào hoặc hỏi chung chung, gợi ý vài câu hỏi họ có thể hỏi.`;
+- Trả lời bằng tiếng Việt, thân thiện, ngắn gọn; xưng "mình", gọi người hỏi là "bạn".
+- Định lượng, dụng cụ, các bước, hạn dùng: CHỈ lấy từ phần CHI TIẾT trong DỮ LIỆU, không bịa số. Danh sách tóm tắt không có định lượng — nếu cần định lượng của món không có chi tiết, nhờ người dùng hỏi rõ tên món.
+- Câu hỏi ngoài tài liệu (kỹ thuật chung, mẹo, giải thích): được trả lời bằng kiến thức chung nhưng nói rõ "tài liệu của quán không ghi, đây là kinh nghiệm chung".
+- Khi nói về một món có trong dữ liệu, đặt thẻ [[mon:ID]] trên một dòng riêng ngay sau đoạn nói về món đó (trang sẽ hiện ảnh thật ở đó). Mỗi món tối đa 1 thẻ, tối đa 3 thẻ mỗi câu trả lời. Bán thành phẩm dùng [[btp:ID]]. ID phải đúng như trong dữ liệu.
+- Nếu người dùng đang xem một món và hỏi chung chung ("món này", "size L"...), hiểu là hỏi về món đó.
+- Định dạng Markdown đơn giản: **đậm**, gạch đầu dòng "- ", danh sách số "1. ", tiêu đề nhỏ "### ". Không dùng bảng, không dùng HTML.`;
 
-  function aiIntro(mode) {
-    if (mode === "claude") return `<span class="mode-pill live"><i></i>Claude AI đang bật</span>`;
-    if (mode === "proxy") return `<span class="mode-pill live"><i></i>AI trực tuyến</span>`;
-    return `<span class="mode-pill"><i></i>Chế độ offline — trả lời từ dữ liệu công thức</span>`;
-  }
   const SUGGESTIONS = [
     "Cà phê sữa đá size L cần những gì?",
     "Món nào dùng milk foam dừa?",
     "Latte nóng và cappuccino nóng khác nhau chỗ nào?",
     "Cách làm nền trà olong?",
-    "Milk foam để được bao lâu?",
-    "Các món trà trái cây dùng ly gì?"
+    "Milk foam để được bao lâu?"
   ];
+  function suggestionsFor(id) {
+    const d = id && byId[id];
+    if (!d) return SUGGESTIONS;
+    const out = [];
+    if (d.sizes && d.sizes.length > 1) out.push("Size M và size L khác nhau thế nào?");
+    out.push("Các bước pha món này?", "Mẹo để nhớ nhanh công thức này?", "Món này dùng ly, nắp, ống gì?");
+    if (d.ing.some((i) => i.p)) out.push("Cần chuẩn bị bán thành phẩm gì?");
+    return out;
+  }
 
-  async function renderAI() {
-    setTitle("Hỏi AI");
-    view.innerHTML = `<div class="ai-shell">
-      <div class="ai-head"><span class="eyebrow">Trợ lý pha chế</span><h1>Hỏi bất cứ điều gì về món</h1><div id="mode">${aiIntro(chat.mode || "offline")}</div></div>
-      <div class="thread" id="thread" aria-live="polite"></div>
-      <div class="suggest" id="suggest" ${chat.turns.length ? "hidden" : ""}>${SUGGESTIONS.map((s) => `<button type="button">${esc(s)}</button>`).join("")}</div>
-      <form class="composer" id="composer" autocomplete="off">
-        <label class="visually-hidden" for="ask">Câu hỏi</label>
-        <textarea id="ask" rows="1" placeholder="Hỏi về món bất kỳ…" enterkeyhint="send"></textarea>
-        <button class="send" type="submit" id="send" aria-label="Gửi">${I.send}</button>
-      </form></div>`;
-    drawThread();
+  function currentDrinkId() {
+    const h = decodeURIComponent((location.hash || "").slice(1));
+    if (h.startsWith("mon-") && byId[h.slice(4)]) return h.slice(4);
+    if (h === "hoc" && learnState.deck[learnState.i]) return learnState.deck[learnState.i].id;
+    if (h === "kiem-tra" && quiz.started && quiz.qs[quiz.i] && quiz.qs[quiz.i].d) return quiz.qs[quiz.i].d.id;
+    return null;
+  }
+
+  function modeLine() {
+    const m = aiMode();
+    const txt = m === "claude" ? "Claude · tính vào lượt dùng Claude của bạn" : m === "proxy" ? "AI trực tuyến · miễn phí" : "Miễn phí · tra từ dữ liệu công thức";
+    const toggle = chat.sample ? `<button type="button" class="mini-toggle" id="ai-claude" aria-pressed="${chat.useClaude}">Dùng Claude</button>` : "";
+    return `<span class="mode-dot${m !== "offline" ? " live" : ""}"></span><span>${esc(txt)}</span>${toggle}`;
+  }
+
+  function buildChatUI() {
+    document.body.insertAdjacentHTML("beforeend", `
+      <button class="ai-fab" id="ai-fab" type="button" aria-label="Hỏi trợ lý AI" aria-expanded="false" aria-controls="ai-panel">${I.chat}</button>
+      <div class="ai-backdrop" id="ai-backdrop" hidden></div>
+      <section class="ai-panel" id="ai-panel" role="dialog" aria-modal="true" aria-labelledby="ai-title" hidden>
+        <header class="ai-head">
+          <span class="ai-ava" aria-hidden="true">${I.spark}</span>
+          <div class="ai-titles"><b id="ai-title">Trợ lý pha chế</b><div class="ai-mode" id="ai-mode"></div></div>
+          <button class="icon-btn" type="button" id="ai-new" aria-label="Cuộc trò chuyện mới">${I.flip}</button>
+          <button class="icon-btn" type="button" id="ai-close" aria-label="Đóng">${I.x}</button>
+        </header>
+        <div class="ai-ctx" id="ai-ctx"></div>
+        <div class="ai-body" id="ai-body">
+          <div class="thread" id="thread" aria-live="polite"></div>
+          <div class="suggest" id="suggest"></div>
+        </div>
+        <form class="composer" id="composer" autocomplete="off">
+          <label class="visually-hidden" for="ask">Câu hỏi</label>
+          <textarea id="ask" rows="1" placeholder="Hỏi về món bất kỳ…" enterkeyhint="send"></textarea>
+          <button class="send" type="submit" id="send" aria-label="Gửi">${I.send}</button>
+        </form>
+      </section>`);
     const ta = $("#ask");
-    const grow = () => { ta.style.height = "auto"; ta.style.height = Math.min(140, ta.scrollHeight) + "px"; };
+    const grow = () => { ta.style.height = "auto"; ta.style.height = Math.min(120, ta.scrollHeight) + "px"; };
     ta.addEventListener("input", grow);
     ta.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); $("#composer").requestSubmit(); } });
     $("#composer").addEventListener("submit", (e) => {
@@ -766,47 +909,107 @@ Quy tắc:
       const v = ta.value.trim(); if (!v) return;
       ta.value = ""; grow(); ask(v);
     });
-    $$("#suggest button").forEach((b) => b.addEventListener("click", () => ask(b.textContent)));
-    const mode = await detectMode();
-    const m = $("#mode"); if (m) m.innerHTML = aiIntro(mode);
-    if (pendingAsk) { const q = pendingAsk; pendingAsk = null; ask(q); }
+    $("#ai-fab").addEventListener("click", () => openChat({}));
+    $("#ai-close").addEventListener("click", closeChat);
+    $("#ai-backdrop").addEventListener("click", closeChat);
+    $("#ai-new").addEventListener("click", () => { if (chat.busy && aiAbort) aiAbort.abort(); chat.turns = []; drawThread(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && chat.open && !$(".lightbox")) closeChat(); });
+    // Bàn phím ảo trên điện thoại: đẩy khung chat lên trên bàn phím.
+    if (window.visualViewport) {
+      const vv = window.visualViewport;
+      const fit = () => { const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop); $("#ai-panel").style.setProperty("--kb", kb + "px"); };
+      vv.addEventListener("resize", fit); vv.addEventListener("scroll", fit);
+    }
+  }
+
+  function drawChrome() {
+    $("#ai-mode").innerHTML = modeLine();
+    const t = $("#ai-claude");
+    if (t) t.addEventListener("click", () => { chat.useClaude = !chat.useClaude; store.set("useClaude", chat.useClaude); drawChrome(); updateFab(); });
+    const d = chat.ctx && byId[chat.ctx];
+    $("#ai-ctx").innerHTML = d ? `<span class="ctx-chip">${photosOf(d.id)[0] ? `<img src="images/drinks/thumb/${esc(photosOf(d.id)[0].f)}" alt="">` : ""}Đang hỏi về: <b>${esc(d.name)}</b><button type="button" aria-label="Bỏ chọn món" id="ai-ctx-x">${I.x}</button></span>` : "";
+    const x = $("#ai-ctx-x"); if (x) x.addEventListener("click", () => { chat.ctx = null; drawChrome(); drawSuggest(); });
+    drawSuggest();
+  }
+  function drawSuggest() {
+    const sug = $("#suggest");
+    sug.hidden = chat.turns.length > 0;
+    sug.innerHTML = suggestionsFor(chat.ctx).map((s) => `<button type="button">${esc(s)}</button>`).join("");
+    $$("button", sug).forEach((b) => b.addEventListener("click", () => ask(b.textContent)));
+  }
+  function updateFab() {
+    const f = $("#ai-fab"); if (!f) return;
+    f.classList.toggle("live", aiMode() !== "offline");
+  }
+
+  async function openChat({ drink, prefill } = {}) {
+    chat.ctx = drink !== undefined ? drink : currentDrinkId();
+    chat.open = true;
+    $("#ai-panel").hidden = false;
+    $("#ai-backdrop").hidden = isWide();
+    $("#ai-fab").hidden = true;
+    $("#ai-fab").setAttribute("aria-expanded", "true");
+    if (!isWide()) document.body.classList.add("chat-lock");
+    drawChrome(); drawThread();
+    if (prefill) $("#ask").value = prefill;
+    if (!window.matchMedia("(pointer: coarse)").matches || prefill) $("#ask").focus({ preventScroll: true });
+    else $("#ai-close").focus({ preventScroll: true });
+    await detectAI(); drawChrome(); updateFab();
+  }
+  function closeChat(refocus) {
+    chat.open = false;
+    $("#ai-panel").hidden = true;
+    $("#ai-backdrop").hidden = true;
+    $("#ai-fab").hidden = false;
+    $("#ai-fab").setAttribute("aria-expanded", "false");
+    document.body.classList.remove("chat-lock");
+    if (refocus !== false) $("#ai-fab").focus({ preventScroll: true });
+  }
+  function chatOnRoute() {
+    if (!chat.open) return;
+    if (!isWide()) closeChat(false);
+    else { chat.ctx = currentDrinkId(); drawChrome(); }
   }
 
   function drawThread() {
     const th = $("#thread"); if (!th) return;
-    th.innerHTML = chat.turns.map((t, i) => t.role === "user"
+    const hello = `<div class="msg bot"><div class="bubble"><p>Chào bạn! Hỏi mình bất cứ điều gì về công thức: định lượng, các bước, ly dùng, bán thành phẩm hay hạn dùng nguyên liệu.</p></div></div>`;
+    th.innerHTML = (chat.turns.length ? "" : hello) + chat.turns.map((t, i) => t.role === "user"
       ? `<div class="msg user"><div class="bubble">${esc(t.content)}</div></div>`
       : `<div class="msg bot" data-i="${i}"><div class="bubble">${t.pending && !t.content ? '<span class="thinking"><i></i><i></i><i></i> Đang nghĩ…</span>' : renderMarkdown(t.content, !t.pending)}</div>${t.meta ? `<div class="meta">${esc(t.meta)}</div>` : ""}</div>`).join("");
     const sug = $("#suggest"); if (sug) sug.hidden = chat.turns.length > 0;
     const send = $("#send"); if (send) { send.innerHTML = chat.busy ? I.stop : I.send; send.setAttribute("aria-label", chat.busy ? "Dừng" : "Gửi"); }
+    scrollChat();
   }
+  function scrollChat() { const b = $("#ai-body"); if (b) b.scrollTop = b.scrollHeight; }
   function updateLast() {
     const th = $("#thread"); if (!th) return;
     const i = chat.turns.length - 1, t = chat.turns[i];
     const el = th.querySelector(`.msg.bot[data-i="${i}"] .bubble`);
-    if (el) el.innerHTML = t.pending && !t.content ? '<span class="thinking"><i></i><i></i><i></i> Đang nghĩ…</span>' : renderMarkdown(t.content, !t.pending);
+    if (el) { el.innerHTML = t.pending && !t.content ? '<span class="thinking"><i></i><i></i><i></i> Đang nghĩ…</span>' : renderMarkdown(t.content, !t.pending); scrollChat(); }
     else drawThread();
   }
 
   function inline(s) {
-    return s.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>").replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<i>$2</i>");
+    return s.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>").replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<i>$2</i>").replace(/(^|\s)_([^_\n]+)_(?=\s|$|[.,])/g, "$1<i>$2</i>");
   }
   function renderMarkdown(md, final) {
-    const lines = String(md || "").split(/\r?\n/);
+    const text = String(md || "").replace(/<think>[\s\S]*?(<\/think>|$)/g, "").trim();
+    const lines = text.split(/\r?\n/);
     let html = "", list = null;
     const close = () => { if (list) { html += `</${list}>`; list = null; } };
     for (const raw of lines) {
       const line = raw.trimEnd();
       const tag = line.trim().match(/^\[\[(mon|btp):([a-z0-9-]+)\]\]$/i);
-      if (tag) { close(); html += tag[1] === "mon" ? aiDrinkCard(tag[2]) : aiPrepCard(tag[2]); continue; }
+      if (tag) { close(); html += tag[1].toLowerCase() === "mon" ? aiDrinkCard(tag[2].toLowerCase()) : aiPrepCard(tag[2].toLowerCase()); continue; }
       const cleaned = line.replace(/\[\[(mon|btp):([a-z0-9-]+)\]\]/gi, "");
-      const e = esc(cleaned);
       let m;
       if (/^#{1,4}\s+/.test(cleaned)) { close(); html += `<h4>${inline(esc(cleaned.replace(/^#{1,4}\s+/, "")))}</h4>`; }
       else if ((m = cleaned.match(/^\s*[-*•]\s+(.*)$/))) { if (list !== "ul") { close(); html += "<ul>"; list = "ul"; } html += `<li>${inline(esc(m[1]))}</li>`; }
       else if ((m = cleaned.match(/^\s*\d+[.)]\s+(.*)$/))) { if (list !== "ol") { close(); html += "<ol>"; list = "ol"; } html += `<li>${inline(esc(m[1]))}</li>`; }
+      else if ((m = cleaned.match(/^\s*>\s?(.*)$/))) { close(); html += `<p class="quote">${inline(esc(m[1]))}</p>`; }
       else if (!cleaned.trim()) { close(); }
-      else { close(); html += `<p>${inline(e)}</p>`; }
+      else { close(); html += `<p>${inline(esc(cleaned))}</p>`; }
     }
     close();
     return html || (final ? "<p>(Không có nội dung)</p>" : "");
@@ -824,28 +1027,31 @@ Quy tắc:
 
   async function ask(question) {
     if (chat.busy) return;
-    const mode = await detectMode();
-    chat.turns.push({ role: "user", content: question });
+    await detectAI();
+    const mode = aiMode();
+    const d = chat.ctx && byId[chat.ctx];
+    const prompt = d ? `[Mình đang xem món: ${d.name} (id: ${d.id})]\n${question}` : question;
+    chat.turns.push({ role: "user", content: question, prompt });
     const bot = { role: "assistant", content: "", pending: true };
     chat.turns.push(bot);
     chat.busy = true;
     drawThread();
-    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
     let raf = 0;
     const onText = (text) => { bot.content = text; if (!raf) raf = requestAnimationFrame(() => { raf = 0; updateLast(); }); };
     aiAbort = new AbortController();
+    const data = contextFor(question + " " + (d ? d.name : ""), chat.ctx);
     try {
-      if (mode === "claude") await askClaude(bot, onText);
-      else if (mode === "proxy") await askProxy(bot, onText);
-      else { bot.content = offlineAnswer(question); bot.meta = "Trả lời offline từ dữ liệu công thức"; }
+      if (mode === "claude") await askClaude(bot, onText, data);
+      else if (mode === "proxy") await askProxy(bot, onText, data);
+      else { bot.content = offlineAnswer(question, chat.ctx); bot.meta = "Trả lời từ dữ liệu công thức (miễn phí)"; }
     } catch (e) {
       const code = e && e.code;
       if (code === "cancelled" || (e && e.name === "AbortError")) { bot.content = (e.text || bot.content || "") + "\n\n_(Đã dừng)_"; }
       else if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"].includes(code)) {
-        chat.mode = "offline"; const m = $("#mode"); if (m) m.innerHTML = aiIntro("offline");
-        bot.content = offlineAnswer(question); bot.meta = "Claude chưa được cho phép trong trang này — đang trả lời offline";
-      } else if (code === "rate_limited") { bot.content = (e.text || "") + "\n\nBạn hỏi hơi nhanh hoặc đã hết lượt dùng Claude. Đợi một lát rồi hỏi lại nhé. Trong lúc chờ, đây là câu trả lời từ dữ liệu:\n\n" + offlineAnswer(question); }
-      else { bot.content = (e && e.text ? e.text + "\n\n" : "") + offlineAnswer(question); bot.meta = "Không kết nối được AI — đang trả lời offline"; }
+        chat.useClaude = false; store.set("useClaude", false); drawChrome(); updateFab();
+        bot.content = offlineAnswer(question, chat.ctx); bot.meta = "Claude chưa được cho phép — đang trả lời từ dữ liệu";
+      } else if (code === "rate_limited") { bot.content = "Hết lượt AI miễn phí tạm thời. Đây là câu trả lời từ dữ liệu:\n\n" + offlineAnswer(question, chat.ctx); }
+      else { bot.content = offlineAnswer(question, chat.ctx); bot.meta = "Không kết nối được AI — đang trả lời từ dữ liệu"; }
     } finally {
       bot.pending = false; chat.busy = false; aiAbort = null;
       if (raf) cancelAnimationFrame(raf);
@@ -854,56 +1060,60 @@ Quy tắc:
   }
 
   function historyForModel() {
-    // giữ 8 lượt gần nhất (không tính câu trả lời đang chờ)
     const done = chat.turns.slice(0, -1).filter((t) => t.content && t.content.trim());
-    return done.slice(-8).map((t) => ({ role: t.role, content: t.content }));
-  }
-  async function askClaude(bot, onText) {
-    const hist = historyForModel();
+    const hist = done.slice(-8).map((t) => ({ role: t.role, content: t.role === "user" ? (t.prompt || t.content) : t.content.replace(/<think>[\s\S]*?(<\/think>|$)/g, "").slice(0, 3000) }));
     while (hist.length && hist[0].role !== "user") hist.shift();
-    const input = [{ role: "user", content: RULES + "\n\n=== DỮ LIỆU CÔNG THỨC ===\n" + contextText() + "\n=== HẾT DỮ LIỆU ===\n\nHãy trả lời các câu hỏi tiếp theo." }, { role: "assistant", content: "Mình đã đọc xong cẩm nang. Bạn cứ hỏi nhé!" }, ...hist];
-    const res = await chat.sample(input, { onText: ({ text }) => onText(text), signal: aiAbort.signal, cache: false });
+    return hist;
+  }
+  async function askClaude(bot, onText, data) {
+    const hist = historyForModel();
+    const last = hist.pop();
+    const input = [{ role: "user", content: RULES }, { role: "assistant", content: "Mình đã hiểu. Bạn cứ hỏi nhé!" }, ...hist,
+      { role: "user", content: `=== DỮ LIỆU CÔNG THỨC ===\n${data}\n=== HẾT DỮ LIỆU ===\n\n${last ? last.content : ""}` }];
+    const res = await chat.sample(input, { onText: ({ text }) => onText(text), signal: aiAbort.signal, cache: false, modelTier: "quick" });
     bot.content = res.text;
     if (res.truncated) bot.meta = "Câu trả lời bị cắt ngắn — thử hỏi gọn hơn.";
   }
-  async function askProxy(bot, onText) {
+  async function askProxy(bot, onText, data) {
     const res = await fetch(CONFIG.aiProxyUrl, {
       method: "POST", headers: { "content-type": "application/json" }, signal: aiAbort.signal,
-      body: JSON.stringify({ system: RULES + "\n\n=== DỮ LIỆU CÔNG THỨC ===\n" + contextText(), messages: historyForModel() })
+      body: JSON.stringify({ data, messages: historyForModel() })
     });
+    if (res.status === 429) { const err = new Error("rate"); err.code = "rate_limited"; throw err; }
     if (!res.ok || !res.body) throw new Error("proxy " + res.status);
     const reader = res.body.getReader(), dec = new TextDecoder();
     let text = "";
     for (;;) { const { value, done } = await reader.read(); if (done) break; text += dec.decode(value, { stream: true }); onText(text); }
-    bot.content = text || "Xin lỗi, mình chưa trả lời được câu này.";
+    if (!text.trim()) throw new Error("empty");
+    bot.content = text;
   }
 
   /* Trợ lý offline: tìm món/nguyên liệu trong câu hỏi và trả lời từ dữ liệu. */
-  function offlineAnswer(question) {
+  function offlineAnswer(question, ctxId) {
     const q = " " + norm(question) + " ";
-    const size = /\b(size|ly|co)\s*l\b|\bl\b/.test(q) ? "L" : /\b(size|ly|co)\s*m\b|\bm\b/.test(q) ? "M" : null;
-    const scored = drinks.map((d) => {
-      let s = 0;
-      [d.name, ...(d.aka || [])].forEach((n) => { const nn = norm(n); if (q.includes(" " + nn + " ") || q.includes(nn)) s = Math.max(s, nn.length + 10); });
-      if (!s) { const words = norm(d.name).split(" ").filter((w) => w.length > 2); const hit = words.filter((w) => q.includes(" " + w + " ") || q.includes(" " + w)).length; if (hit >= Math.max(2, words.length - 1)) s = hit * 3; }
-      return { d, s };
-    }).filter((x) => x.s > 0).sort((a, b) => b.s - a.s);
+    const size = /\b(size|ly|co)\s*l\b|\bl\b/.test(q) && !/\bm va (size )?l\b|\bm\b.*\bl\b/.test(q) ? "L" : /\b(size|ly|co)\s*m\b/.test(q) && !/\bl\b/.test(q) ? "M" : null;
+    let scored = findDrinks(question);
     const preps = MENU.preps.filter((p) => q.includes(norm(p.name)) || q.includes(norm(p.name.replace(/^Nền /, ""))));
     const wantsShelf = /\b(date|han|bao lau|de duoc|bao quan|het han)\b/.test(q);
     const wantsWhich = /\b(mon nao|nhung mon|cac mon|mon gi)\b/.test(q);
+    const wantsPrep = /ban thanh pham/.test(q);
     const ingHit = allIngNames.filter((n) => q.includes(norm(n))).sort((a, b) => b.length - a.length)[0];
     const catHit = MENU.categories.find((c) => q.includes(norm(c.short)) || q.includes(norm(c.name)));
     const out = [];
 
     if (wantsShelf) {
-      const rows = MENU.shelf.filter((r) => { const n = norm(r[0]); return n.split(" ").some((w) => w.length > 3 && q.includes(w)); });
-      const ps = preps.length ? preps : MENU.preps.filter((p) => q.includes(norm(p.name).split(" ").slice(-2).join(" ")));
-      if (rows.length || ps.length) {
+      const rows = MENU.shelf.filter((r) => norm(r[0]).split(" ").some((w) => w.length > 3 && q.includes(w)));
+      if (rows.length || preps.length) {
         out.push("### Hạn dùng (date)");
         rows.forEach((r) => out.push(`- **${r[0]}** (${r[1].toLowerCase()}): **${r[2]}** — bảo quản ${r[3]}`));
-        ps.forEach((p) => out.push(`- **${p.name}**: ${p.shelf} (tủ mát <5 độ)`));
+        preps.forEach((p) => out.push(`- **${p.name}**: ${p.shelf} (tủ mát <5 độ)`));
         return out.join("\n");
       }
+    }
+    if (wantsPrep && !preps.length && ctxId && byId[ctxId]) {
+      const ps = uniq(byId[ctxId].ing.filter((i) => i.p).map((i) => i.p));
+      if (ps.length) { out.push(`**${byId[ctxId].name}** cần chuẩn bị:`); ps.forEach((id) => out.push(`[[btp:${id}]]`)); return out.join("\n"); }
+      return `**${byId[ctxId].name}** không dùng bán thành phẩm nào trong cẩm nang.`;
     }
     if (preps.length && !scored.length) {
       preps.slice(0, 2).forEach((p) => {
@@ -914,23 +1124,25 @@ Quy tắc:
       });
       return out.join("\n");
     }
-    if ((wantsWhich || !scored.length) && ingHit) {
+    if ((wantsWhich || (!scored.length && !ctxId)) && ingHit) {
       const ds = drinks.filter((d) => d.ing.some((i) => i.n === ingHit));
       out.push(`Có **${ds.length} món** dùng **${ingHit}**:`);
       ds.forEach((d) => { const i = d.ing.find((x) => x.n === ingHit); out.push(`- **${d.name}**: ${typeof i.q === "object" ? Object.entries(i.q).map(([s, v]) => `${s} ${v}`).join(" / ") : i.q} ${i.u}`); });
       ds.slice(0, 3).forEach((d) => out.push(`[[mon:${d.id}]]`));
       return out.join("\n");
     }
-    if (!scored.length && catHit) {
+    if (!scored.length && !ctxId && catHit) {
       const ds = drinks.filter((d) => d.cat === catHit.id);
       out.push(`Nhóm **${catHit.name}** có ${ds.length} món:`);
       ds.forEach((d) => out.push(`- **${d.name}** — ${packOf(d, d.sizes ? d.sizes[d.sizes.length - 1] : null).join(", ")}`));
       ds.slice(0, 2).forEach((d) => out.push(`[[mon:${d.id}]]`));
       return out.join("\n");
     }
+    if (!scored.length && ctxId && byId[ctxId]) scored = [{ d: byId[ctxId], s: 99 }];
     if (scored.length) {
       const strong = scored.filter((x) => x.s >= 12);
       const top = (strong.length ? strong : scored.slice(0, 1)).slice(0, 3).map((x) => x.d);
+      const onlyPack = /\b(ly|nap|ong|dung cu|packaging)\b/.test(q) && !/\b(buoc|cach|lam|pha)\b/.test(q);
       top.forEach((d) => {
         const sizes = size && d.sizes && d.sizes.includes(size) ? [size] : sizesOf(d);
         out.push(`### ${d.name}`);
@@ -938,12 +1150,15 @@ Quy tắc:
         if (!d.sizes && size) out.push("_Tài liệu không chia size cho món này._");
         sizes.forEach((s) => {
           if (s) out.push(`**Size ${s}:**`);
-          d.ing.forEach((i) => out.push(`- ${i.n}: **${qtyOf(i, s)} ${i.u}**${i.side ? " (phục vụ kèm)" : ""}`));
+          if (!onlyPack) d.ing.forEach((i) => out.push(`- ${i.n}: **${qtyOf(i, s)} ${i.u}**${i.side ? " (phục vụ kèm)" : ""}`));
           out.push(`- Dụng cụ: ${packOf(d, s).join(", ")}`);
         });
-        out.push("**Các bước:**");
-        d.steps.forEach((s, i) => out.push(`${i + 1}. ${s}`));
-        (d.notes || []).forEach((n) => out.push(`> Lưu ý: ${n}`));
+        if (!onlyPack) {
+          out.push("**Các bước:**");
+          d.steps.forEach((s, i) => out.push(`${i + 1}. ${s}`));
+          (d.notes || []).forEach((n) => out.push(`> Lưu ý: ${n}`));
+        }
+        if (/meo|nho nhanh|de nho/.test(q)) out.push(`**Công thức rút gọn để nhẩm:** ${sizesOf(d).map((s) => (s ? `${s} → ` : "") + formulaLine(d, s)).join("  |  ")}`);
         out.push(`[[mon:${d.id}]]`, "");
       });
       return out.join("\n");
@@ -951,9 +1166,7 @@ Quy tắc:
     return [
       "Mình chưa tìm thấy món hay nguyên liệu nào khớp với câu hỏi trong cẩm nang.",
       "Bạn thử hỏi theo kiểu:",
-      ...SUGGESTIONS.slice(0, 4).map((s) => `- ${s}`),
-      "",
-      CONFIG.aiProxyUrl ? "" : "_Trang đang ở chế độ offline nên chỉ trả lời được các câu về công thức có trong tài liệu. Xem README để bật AI trực tuyến._"
+      ...SUGGESTIONS.slice(0, 4).map((s) => `- ${s}`)
     ].join("\n");
   }
 
@@ -981,12 +1194,14 @@ Quy tắc:
     t.style.visibility = "hidden";
   }, true);
 
-  window.__sotay = { ask: (q) => ask(q), offlineAnswer: (q) => offlineAnswer(q) }; // tiện kiểm thử
+  window.__sotay = { ask: (q) => ask(q), offlineAnswer: (q, id) => offlineAnswer(q, id), openChat: (o) => openChat(o || {}), contextFor: (q, id) => contextFor(q, id) }; // tiện kiểm thử
+  buildChatUI();
   route();
-  detectMode().then((m) => { const dot = $(".tab-ai"); if (dot && (m === "claude" || m === "proxy")) dot.insertAdjacentHTML("beforeend", '<span class="tab-dot" aria-hidden="true"></span>'); });
+  detectAI().then(updateFab);
 
   /* PWA: cài lên màn hình chính, dùng được khi mất mạng (chỉ khi chạy trên web thường, không phải trong Claude). */
-  if ("serviceWorker" in navigator && !window.claude && /^https:$|^http:$/.test(location.protocol) && (location.protocol === "https:" || location.hostname === "localhost")) {
+  // Chỉ bật trên web thật (https). Chạy local thì không cache để sửa code thấy ngay.
+  if ("serviceWorker" in navigator && !window.claude && location.protocol === "https:") {
     window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
   }
 })();

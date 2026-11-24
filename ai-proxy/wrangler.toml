@@ -1,8 +1,10 @@
 name = "so-tay-pha-che-ai"
-main = "src/index.js"
+main = "worker.js"
 compatibility_date = "2026-10-01"
-compatibility_flags = ["nodejs_compat"]
 
 [vars]
 # Chỉ cho phép trang của bạn gọi Worker (cách nhau bằng dấu phẩy).
 ALLOWED_ORIGINS = "https://t1ennew.github.io"
+AI_PROVIDER = "openai"
+AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
+AI_MODEL = "qwen/qwen3.8-27b"
