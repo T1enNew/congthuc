@@ -335,8 +335,7 @@
       ${ps.length > 1 ? `<div class="gallery-dots" aria-hidden="true">${ps.map((_, i) => `<i class="${i === 0 ? "on" : ""}"></i>`).join("")}</div>
       <button class="gallery-nav prev" type="button" aria-label="Ảnh trước">${I.back}</button><button class="gallery-nav next" type="button" aria-label="Ảnh sau">${I.next}</button>` : ""}
     </div>
-    ${ps.length > 1 ? `<div class="thumbs">${ps.map((p, i) => `<button type="button" data-go="${i}" aria-label="Xem ảnh ${i + 1}" aria-current="${i === 0}"><img src="images/drinks/thumb/${esc(p.f)}" alt="" loading="lazy" decoding="async"></button>`).join("")}</div>` : ""}
-    <div class="photo-note">Ảnh thật minh hoạ kiểu món — ly ở quán có thể khác. Chạm ảnh để phóng to.</div>`;
+    ${ps.length > 1 ? `<div class="thumbs">${ps.map((p, i) => `<button type="button" data-go="${i}" aria-label="Xem ảnh ${i + 1}" aria-current="${i === 0}"><img src="images/drinks/thumb/${esc(p.f)}" alt="" loading="lazy" decoding="async"></button>`).join("")}</div>` : ""}`;
   }
   function wireGallery(root, d) {
     const track = $(".gallery-track", root);
